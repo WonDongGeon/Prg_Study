@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        /*     
+    html, body {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: #c8e6c9;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    .container {
+      width: 80%;
+      height: 100%;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    header, nav, footer {
+      width: 100%;
+      height: 10%;
+      text-align: center;
+      line-height: 2.5em;
+      color: white;
+    }
+
+    header { background: #2e7d32; }
+    nav { background: #388e3c; }
+    footer { background: #66bb6a; }
+
+    .main {
+      display: flex;
+      width: 100%;
+      height: 67%;
+    }
+
+    aside {
+      width: 25%;
+      background: #43a047;
+      color: white;
+      text-align: center;
+      line-height: 2.5em;
+    }
+
+    section {
+      width: 75%;
+      background: #4caf50;
+      color: white;
+      text-align: center;
+      line-height: 2.5em;
+    } */
+        html, body {
+            width: 100%;
+            height: 100%;
+        }
+        * {
+            /* *은 모든 태그를 의미 */
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box; /*  */
+        }
+        .container {
+            width: 100%;
+            height: 100%;
+        }
+        body{
+            background: #c8e6c9;
+            text-align: center;
+            width: 100%;
+            height: 100%;
+        }
+        header{
+            background: #2e7d32;
+            width: 80%;
+            height: 10%;
+        }
+        nav {
+            background: #377e3c;
+            width: 80%;
+            height: 10%;
+        }
+        main {
+            background: #46994a;
+            width: 80%;
+            height: 77%;
+            display: flex;
+        
+        }
+        aside {
+            background: #43a047;
+            width: 20%;
+            height: 67%;
+            float: left; /* float : 요소를 띄워서 배치, left : 왼쪽에 */;
+        }
+        section{
+            background: #4caf50;
+            width: 80%;
+            height: 67%;
+            
+        }
+        footer{
+            background: #66bb6a;
+            width: 80%;
+            height: 10%;
+            clear: both; /* 왼쪽/오른쪽에 나란히 배치되지 않고, 완전히 아래로 내려가도록 */
+        }
+        header, nav, main, aside, section, footer {
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>header</header>
+        <nav>nav</nav>
+        <div class="container">
+             <main>main</main>
+             <aside>side</aside>
+             <section>contents</section>
+         </div>
+        <footer>footer</footer>
+    </div>
+</body>
+</html>
