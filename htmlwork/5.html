@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+</head>
+<body>
+    <header>
+        <div class="head-menu">
+            <ul>
+                <li class="icon-width-label"><i class="fa-solid fa-bars"></i></li>    
+                <li><a href="#">pay</a></li>
+            </ul>
+            <ul>
+                <li class="icon-width-label"><i class="fa-solid fa-message"></i></li>
+                <li class="icon-width-label"><i class="fa-solid fa-bell"></i></li>
+                <li class="icon-width-label"><i class="fa-solid fa-bucket"></i></li>
+            </ul>
+        </div>
+        <div class="search">
+            <span>NAVER</span>
+            <input type="text" class="search-box" placeholder="검색어를 입력하세요">
+            <button class="search-button"></button>
+        </div>
+    </header>
+    <nav>
+        <ul class ="nav-list">
+            <li class="icon-width-label"><i class="fa-solid fa-envelope"></i></i><span>메일</span></li>
+            <li class="icon-width-label"><i class="fa-solid fa-blog"></i><span>블로그</span></li>
+            <li class="icon-width-label"><i class="fa-solid fa-store"></i><span>스토어</span></li>
+            <li class="icon-width-label"><i class="fa-solid fa-newspaper"></i><span>뉴스</span></li>
+            <li class="icon-width-label"><i class="fa-solid fa-chart-simple"></i><span>증권</span></li>
+            <li class="icon-width-label"><i class="fa-solid fa-house-user"></i><span>부동산</span></li>
+            <li class="icon-width-label"><i class="fa-solid fa-map-location-dot"></i><span>지도</span></li>
+            <li class="icon-width-label"><i class="fa-solid fa-book-open-reader"></i><span>웹툰</span></li>
+            <li class="icon-width-label"><i class="fa-solid fa-podcast"></i><span>치지직</span></li>
+            <li class="icon-width-label"><i class="fa-solid fa-angles-right"></i><span>더보기</span></li>
+            <!-- icon-with-label와 fa-regular fa-envelope는 속성, 즉 i에는 2가지 속성이 있음-->
+        </ul>
+    </nav>
+    <style>
+        
+        .head-menu {
+            display: flex; /* flex는 자기 하위에 있는 내용을 떙긴다. */
+            justify-content: space-between;
+        }
+        .head-menu ul {
+            display: flex;
+            list-style-type: none;
+        }
+        .head-menu ul li {
+            margin: 15px;
+        }
+
+        .head-search {
+            color: green;
+            font-size: 30px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+        .head-search span {
+            padding: 10px 0px;
+        }
+        .head-search input {
+            width: 425px;
+        }
+        .head-search i {
+            font-size: 24px;
+            padding: 10px 0px;
+        }
+
+        .nav-list{
+            display: flex;
+            justify-content: space-between;
+        }
+
+
+        a{
+            text-decoration: none;
+            border:1px solid black;
+            border-radius: 100%;
+            padding: 2px;
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+        }
+        a:visited{
+            color: black;
+        }
+        a:active{
+            color: black;
+        }
+
+        .icon-width-label {
+            display: flex;
+            flex-direction: column;
+            font-size: 14px;
+        }
+        .icon-width-label i {
+            font-size: 24px; /* 아이콘 크기 조정 */
+        }
+
+        .search{
+            color: greenyellow;
+            font-size: 50px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .search-box {
+            width: 50%;
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 30px;
+            box-sizing: border-box;
+        }
+        .search-button {
+            background-color: #1ec800;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .search-button:hover {
+            background-color: #17a600;
+        }
+    </style>
+</body>
+</html>
