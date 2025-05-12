@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ul_li_hover.html</title>
+    <style>
+        ul{
+            display: flex;
+            border: 1px solid white;
+            list-style-type: none; /* 기본적으로 표시되는 점(●)이나 숫자(1. 2. 3...)를 없애는 코드 */
+            padding: 0;
+            justify-content: space-between;
+            /* justify-content: space-between <- 자식 요소들을 양쪽 끝에 정렬하고, 나머지 공간을
+            요소들 사이에 균등하게 배치함. */
+        }
+        li{
+            border: 1px solid black;
+            padding: 8px 16px;
+        }
+        li:hover{ /* 해당 목록 위에 마우스가 올라갈 때 수행 */
+            color: white;
+            background-color: black;
+
+            border-radius: 10px;
+            /* border-radius : 태두리 모서리를 둥글게 */
+        }
+    </style>
+</head>
+<body>
+    <ul>
+        <!-- li*4를 하고 enter하면 li 4개를 만들 수 있다. -->
+        <li>menu1</li>
+        <li>menu2</li>
+        <li>menu3</li>
+        <li>menu4</li>
+    </ul>
+</body>
+</html>

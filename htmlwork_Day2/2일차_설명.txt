@@ -1,0 +1,7 @@
+html에서 레이아웃 태그에 대한 코드 활용
+
+생성된 파일 순서
+header.html
+layout.html
+layout2.html
+layout3.html
