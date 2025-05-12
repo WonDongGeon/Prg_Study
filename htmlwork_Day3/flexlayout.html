@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>flexlayout.html</title>
+    <style>
+        nav{
+            border: 1px solid red;
+            /* text-align: center; */
+        }
+        ul{ /* 여기에 사용된 속성 내용들은 알아두는 것이 좋음 */
+            border: 1px solid green;
+            display: flex; /* 자식 요소들이 자동으로 가로(행) 정렬되며, 정렬과 배치가 훨씬 더 유연하고 강력해집니다. */
+            list-style-type: none; /* <ul>이나 <ol> 목록 항목의 기본 점(●), 숫자(1. 2. 3...)를 없앱니다. */
+            padding: 0;
+
+            /* flex-direction: column; 자식 요소를 세로로 정렬  */
+            /* 1. 자식 요소를 가로로 정렬하고, 2. 요소 간 간격을 균등하게 분배 */
+            flex-direction: row; /* 1 */
+            justify-content: space-between; /* 2 */
+            flex-wrap: wrap; /* Flexbox 레이아웃에서 자식 요소들이 한 줄에 다 들어가지 않을 경우 줄 바꿈을 허용 */
+            /* align-items: center; 자식 요소를 교차 축 방향으로 중앙 정렬 */
+        }
+        li{
+            /* width: 200px; */
+            border: 1px solid black;
+        }
+
+        /* and 이후 ()전에 띄워쓰기 주의할 것 
+        미디어 query는 현재의 스크린의 크기를 확인한 후 최소 넓이가 800px 이상일 때 수행 */
+        @media screen and (min-width:800px) { /* 스타일 재적용 */
+            ul{ 
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul>
+            <li>메뉴1</li>
+            <li>메뉴2</li>
+            <li>메뉴3</li>
+            <li>메뉴4</li>
+        </ul>
+    </nav>
+</body>
+</html>

@@ -1,0 +1,16 @@
+w3school에서 알 수 있는 html 지식
+
+파일 생성 순서
+style.html
+Fomatting.html
+backgounr_color.html
+styles_href_target.html(images파일에서 bono.jpg 활용)
+styles.css(styles_href_target.html에서 활용)
+favicon.html(images파일에서 favicon.ico 활용)
+table.html
+timeschool.html
+mywebpage.html
+flexlayout.html
+media.html
+menubar.html
+style.menu.css(menubar.html에서 활용)
