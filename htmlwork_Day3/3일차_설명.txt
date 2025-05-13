@@ -1,4 +1,5 @@
-w3school에서 알 수 있는 html 지식
+메뉴바 화면 제작
+HTML Tutorial에 대한 설명
 
 파일 생성 순서
 style.html
