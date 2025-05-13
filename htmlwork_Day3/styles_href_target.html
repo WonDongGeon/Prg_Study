@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>styles_href_target.html</title>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div></div>
+    <a href="style.html" target="_top">Visit W3Schools.com!</a>
+    <!-- href에는 갖고 있는 html파일 이름을 작성하여 이동할 수 있음 -->
+    <!-- target 속성은 링크나 요청이 어디에 열릴지 지정하는 중요한 속성  -->
+    <!-- 값 : 
+        _self : 기본값. 현재 탭(또는 현재 프레임)에서 링크 열기
+        _blank : 새 탭(또는 새 창)에서 링크 열기
+        _parent : 부모 프레임에서 열기 (프레임셋/iframe일 때만 의미 있음)
+        _top : 모든 프레임을 벗어나 브라우저 전체 창에서 열기
+        그 외(프레임 이름) : 지정한 이름의 프레임 또는 iframe에서 열기
+    -->
+    
+    <img src="images/bono.jpg"><br> 
+    <!-- 현재의 파일 위치에서 images 폴더 아래 bono.jpg 접근 -->
+    
+    <img src="./images/bono.jpg"><br> 
+    <!-- 현재의 폴더 위치에서 images 폴더 아래 bono.jpg 접근 -->
+    
+    <img src="/images/bono.jpg"><br> 
+    <!-- 절대 경로(웹서버시작위치) 위치에서 images 폴더 아래 bono.jpg 접근-->
+    <!-- ../images/bono.jpg ..의 의미는 현재 폴더를 기준으로 상위폴더의 images폴더 의미 -->
+</body>
+</html>
