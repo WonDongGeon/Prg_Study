@@ -1,0 +1,101 @@
+<!-- 네이버 로그인 부분 제작 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D.html</title>
+    <style>
+        body{
+            text-align: center;
+        }
+        .box{ /* 로그인 박스 전체 부분 */
+            border:2px solid rgba(197, 193, 193,0.5);
+            border-radius: 10px;
+            height:300px;
+            padding:20px;
+            display: inline-block;
+            white-space: normal; /* 중요 */
+            transition: transform 3s;
+        }
+
+         /* 아이디와 비밀번호 부분 */
+        .loginform{
+            display:flex;
+            flex-wrap: wrap;
+            width: 100%;
+            margin:0;padding:0;
+            font-size: 0;
+        }
+        .loginform input{ 
+            width: 100%;
+            margin:0;padding:20px;
+            border:1px solid gainsboro;            
+        }
+        /* 아이디와 비밀번호 input 테두리 설정 */
+        .loginform input:nth-child(1){
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .loginform input:nth-child(2){
+            border-top:none; /* 위 테두리 삭제 : 아이디 테두리와 곁쳐보이지 않기 위해서 */
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+        /* 여기까지 */
+
+
+        .opt{ /* 로그인 상태 유지, IP보안 부분*/
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* 로그인 버튼 부분 */
+        .login_btn{ 
+            display: flex;
+        }
+        .login_btn input{
+            width: 100%;
+            border-radius: 5px;
+            background-color: grey;
+            padding:20px;
+            font-size: 20px;
+            color:white;
+            border:none;
+        }
+        
+    </style>
+</head>
+<body>
+    <div id="box" class="box">
+        <div class="loginform">
+            <input type="text" name="id" id="id" placeholder="아이디 또는 전화번호">
+            <input type="password" name="password" id="password" placeholder="비밀번호">
+        </div>
+        <div class="opt">
+            <div>
+                <input type="checkbox" checked style="border-radius: 50px;">
+                <span>로그인 상태 유지</span>
+            </div>
+            <div>
+                <span>IP보안</span>
+                <input type="button" value="ON">
+            </div>
+        </div>
+        <div class="login_btn">
+            <input type="button" value="로그인">
+        </div>
+    </div>
+
+    <script>
+        const box = document.querySelector("#box"); 
+      
+        box.addEventListener("click", () => { // 로그인 박스 부분을 클릭하였을 때 실행함.
+          box.style.transform = "rotateY(0deg)"; // 0도에서
+          void box.offsetWidth; // 아무것도 하지 않는 것처럼 보이지만, 실제로는 브라우저에게 요소의 레이아웃 정보를 강제로 계산하도록
+          box.style.transform = "rotateY(360deg)"; // 360도 회전
+        });
+    </script>
+</body>
+</html>
