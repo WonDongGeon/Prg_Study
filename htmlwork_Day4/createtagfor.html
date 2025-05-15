@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>createtagfor.html</title>
+</head>
+<body> <!-- body는 중심점 -->
+    <input type="button" value="block속성으로" onclick="block()">
+    <input type="button" value="flex속성으로" onclick="flex()">
+    <input type="button" value="blockflex속성으로" onclick="blockflex()">
+</body>
+<script>
+     //버튼 두 개를 만들고 첫번째 버튼을 클릭할 때 main을 block속성으로
+    //두번째 버튼을 클릭할 때 main을 flex속성으로 변경하시오.
+    function block() {
+        main.style.display ="block";
+    }
+    function flex() {
+        main.style.display ="flex";
+        main.style.flexWrap = "wrap";
+    }
+   
+
+    var main = document.querySelector("body"); // 해당 HTML문서에서 객체를 가져옴(태그를 가져옴) 가져온 것을 main에 저장
+
+    //window는 브라우저의 전체 장을 의미하며 웹 페이지를 담고 있는 가장 최상위 객체입니다.(전역객체이며, 대부분 생략됨)
+    //document는 현재 웹 페이지(Document Object Model, DOM)를 표현한 객체입니다.
+    //javascript로 웹 페이지를 제어하려면 항상 document를 사용합니다.
+    var div = window.document.createElement("div"); // 없는 태그를 가져올 때 사용(HTML문서에서 새 HTML 요소를 생성) 생성한 요소(div)를 div에 저장
+    div.style.width="100px"; //div의 style에서 width(너비) 속성을 100px로 설정
+    div.style.height = "100px"; //div의 style에서 height(높이) 속성을 100px로 설정
+    div.style.backgroundColor="red"; //div의 style에서 backgroundColor(배경색) 속성을 red로 설정
+    div.style.margin ="5px 5px"; //div의 style에서 margin(바깥쪽 여백) 속성을 5px(위아래) 5px(좌우)로 설정
+
+    // JavaScript에서 ??()는 함수를 의미 
+
+    //반복문은 초기화, 제어, 증가
+    //반복문은 단순반복 또는 값의 증가 또는 감소에 의한 반복
+    for(i = 0; i < 10; i++) { //for()는 함수(반복문), 입력값(입력값은 ,로 구분)은 1개 조건(조건은 ;으로 구분)은 3개
+        var div2 = window.document.createElement("div"); 
+        div2.style.width="100px"; 
+        div2.style.height = "100px"; 
+        div2.style.backgroundColor="red"; 
+        div2.style.margin ="5px 5px"; 
+        div2.textContent = i+1; //div2 안의 텍스트를 i로 표시(증가하는 i를 text에 표시함)
+        div2.style.fontSize="50px"; //div2의 style에서 fontSzie(글자크기) 속성을 50px로 설정
+        main.appendChild(div2); // style이 적용된 div2을 최종으로 main에 추가함(총 10번 반복하여 10개 추가)
+    }
+
+    main.style.display="flex";
+    main.style.flexWrap = "wrap";
+
+    //문제 : 버튼 하나로 block 모드와 flex모드로 변경하도록
+    function blockflex() {
+        if(main.style.display == "block"){
+            main.style.display ="flex";
+        }else{
+            main.style.display ="block"
+        }
+    }
+    //문제 : flex모드일 때 박스의 크기는 유지하며 공간이 없을 때 자동으로 아래로 내려가도록 설정
+    main.style.display = "flex";  // flex 모드로 설정
+    main.style.flexWrap = "wrap"; // 공간이 부족할 경우 아이템들이 자동으로 줄 바꿈되도록 설정
+
+    var i = 0;
+    while(i < 10){ //while() 함수(반복문)
+
+        i++;
+    }
+
+</script>
+</html>
