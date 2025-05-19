@@ -8,4 +8,4 @@ link_i_img.html
 naver.html
 
 https://www.w3schools.com/
-w3school에서 HTML, CSS JavaScript 등에 대한 설명과 활용 코드가 있음
+w3school에서 HTML, CSS JavaScript 등 다양한 언어에 대한 설명과 활용 코드가 있음
