@@ -1,0 +1,27 @@
+<books>
+    <book>
+        <title>JavaScript 기초</title>
+        <author>홍길동</author>
+        <price>20000</price>
+    </book>
+    <book>
+        <title>java 기초</title>
+        <author>김길동</author>
+        <price>21000</price>
+    </book>
+    <book>
+        <title>html 기초</title>
+        <author>유길동</author>
+        <price>22000</price>
+    </book>
+    <book>
+        <title>css 기초</title>
+        <author>류길동</author>
+        <price>23000</price>
+    </book>
+    <book>
+        <title>python 기초</title>
+        <author>여길동</author>
+        <price>24000</price>
+    </book>
+</books>
