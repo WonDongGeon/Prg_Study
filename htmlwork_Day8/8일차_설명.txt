@@ -1,0 +1,13 @@
+자바스크립트 JSON에 대한 설명과 REST API 활용 방법
+
+JSON은 JavaScript Object Notation : 데이터를 표현하기 위한 문자열
+        자바스크립트 객체 표기법
+
+파일 생성 순서
+index.html
+data.json
+index copy.html
+find.html
+findproc.html
+data2.json
+findprocmove.html

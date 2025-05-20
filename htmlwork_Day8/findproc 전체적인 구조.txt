@@ -1,0 +1,11 @@
+xmlhttp.onreadystatechange = function() { 상태가 변할때(onreadystatechange) 정의해놓은 함수(function)를 호출
+    if(네트워크 상태 확인하는 코드) {
+        try{
+            if() {}
+        }catch(e) {}
+    }
+}
+
+팀프로젝트 간에 페이지별로
+style.JavaScript을 어떻게 개별적으로 작성할 것인가? webpack
+작성한 파일을 어떻게 한 곳에 모아서 서비스할 것인가? github
