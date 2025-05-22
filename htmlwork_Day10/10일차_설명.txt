@@ -1,6 +1,0 @@
-영화진흥위원회 오픈 API 활용
-
-파일 생성 순서
-movierank.html
-movierank_ex.html
-dom.html
