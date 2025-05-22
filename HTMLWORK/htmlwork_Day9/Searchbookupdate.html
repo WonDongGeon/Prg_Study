@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Searchbooksupdate.html</title>
+</head>
+<body>
+    <div>
+        책 찾기: 
+        <input type="text" id="findbook">
+        <button onclick="find()">찾기</button>
+    </div>
+    <div>
+        <ul>
+            <li>제목 : </li>
+            <li>저자 : </li>
+            <li>가격 : </li>
+        </ul>
+    </div>
+    <script>
+        /*
+        동작순서를 글로 적는다.
+        1. 입력 상자에 제목을 입력한다.
+        2. 찾기 버튼을 누른다.
+        3. books.json을 파일을 XMLHttpRequest 객체를 통해 가져온다.
+        4. 가져온 데이터를 입력 상자의 찾기제목과 비교하여 정보를 획득한다.
+        5. 획득한 책의 객체 정보를 ul태그의 li에 입력한다.
+        */
+       function find() {
+        let xhttp = new XMLHttpRequest();
+        xhttp.open("get", "http://127.0.0.1:5500/books.json");
+        xhttp.send(); // 준비된 요청을 실제로 서버에 보냅니다.
+        xhttp.onload=function() { // 요청이 완료되고 응답을 받았을 때 실행되는 함수
+            let books = JSON.parse(xhttp.responseText);
+
+            //id가 findbook인 데이터를 변수에 저장
+            // let id = document.querySelector("#findbook");
+            let id = document.getElementById("findbook");
+            let Search = id.value
+            console.log(Search);
+            
+            //찾기(정확히 찾기) => 정확히 찾는 내용을 일부 내용으로 찾기기능 수정
+            let regex = new RegExp(Search, "i"); //문자열을 정규식으로 변환 /javascript/i
+            // var result = books.find(book => book.title === Search);
+            // let result = books.find(book => regex.test(book.title)); //정규식을 전체정보와 비교를 test함수를 통해 처리
+            let result = books.filter(book => regex.test(book.title));
+            console.log(result);
+
+            //찾은 객체를 화면에 표시
+            let ul = document.querySelector("ul");
+            ul.querySelector("li:nth-child(1)").textContent = `제목 : ${result["title"]}`;
+            ul.querySelector("li:nth-child(2)").textContent = "저자 : "+result["author"];
+            ul.querySelector("li:nth-child(3)").textContent = `가격 : ${result["price"]}`;
+            //ul에서 li의 1번, 2번, 3번에 textContent를 대입
+        }   
+       }
+       
+       /*
+       참고사항 querySelector함수는 클래스는 .클래스명, 아이디는 #아이디명, 일반태그는 태그명으로 객체를 획득할 수 있다.
+       */
+    </script>
+</body>
+</html>

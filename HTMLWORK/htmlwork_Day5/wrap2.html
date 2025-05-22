@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wrap2.html</title>
+    <style>
+        .box{
+            /* display: flex; */
+            /* flex-wrap: wrap; */
+            width:30%;
+            border:1px solid red;
+            font-size:0;
+            padding:20px;
+            transition: transform 5s; /* transform은 transition이 설정되어야 동작함 */
+        }
+
+        .box input:nth-child(1) { /* .box 요소 내부의 첫 번째 <input> 요소를 선택합니다. */
+            border-top-left-radius: 10px; /* <input>요소 왼쪽 위 테두리를 둥글게 10px로 설정 */
+            border-top-right-radius: 10px; /* <input>요소 오른쪽 위 테두리를 둥글게 10px로 설정 */
+        }
+        .box input:nth-child(2) { /* .box 요소 내부의 두 번째 <input> 요소를 선택합니다. */
+            border-top: none; /* 위 테두리를 삭제 */
+            border-bottom-left-radius: 10px; /* <input>요소 왼쪽 아래 테두리를 둥글게 10px로 설정 */
+            border-bottom-right-radius: 10px; /* <input>요소 오른쪽 아래 테두리를 둥글게 10px로 설정 */
+        }
+
+        .box:hover {
+            transform: rotateY(360deg); /* 360도 Y축으로 회전함 */
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <input type="text">
+        <input type="text">
+    </div>
+    <button>관리자용전환</button>
+    <script>
+        const box = document.getElementsByClassName("box"); /* box라는 이름을 가진 클래스를 가진 모든 요소를 선택 */
+        const trsbtn = document.querySelector("button"); //변수 사용시 var, let, const
+        trsbtn.addEventListener("click",()=>{ /* click 이벤트가 발생했을 때 실행할 콜백 함수를 지정 */
+            box[0].style.transform="rotateY(360deg)"; /* box[0] 요소에 3D 회전 효과를 주는 스타일을 설정합니다. */
+            /* 무조건 배열로 줘야됨. */
+        }); 
+    </script>
+</body>
+</html>

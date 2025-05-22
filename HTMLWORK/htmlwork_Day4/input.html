@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>input.html</title>
+</head>
+<body>
+<!-- <form action=""> -->
+
+    <!-- 전화번호부 입력 폼 -->
+    <fieldset> <!-- 입력 양식을 그룹화하고 시각적으로 테두리로 감싸줌 -->
+        <legend>전화번호부 입력 폼</legend>  <!-- fieldset 영역의 제목 역할 -->
+        <form action="input_proc.html" method="post"> <!-- 사용자 입력 데이터를 서버로 전송하는 영역 시작 -->
+            <!-- 입력 내용은 다 들어가 있기 때문에 이 구간에서 시작해도됨. -->
+            <!-- 
+            이런 form 태그에는 method라는 속성이 존재함. 
+            method에는 get(URL에 입력한 내용 공개)이랑 post(URL에 입력한 내용 숨김)
+            -->
+            <!-- 
+            input(text)를 다 입력하고 input(submit)을 누르면 URL은 이렇게 나온다.
+            input_proc.html?name=원동건&tel=010-1111-1111&email=won%40naver.com (method="get"일 경우)
+            input_proc.html (method="post"일 경우)
+             -->
+        <div>
+            <label for="name">이름</label> <!-- 입력 필드에 설명 제공 -->
+            <input type="text" name="name" id="name" placeholder="이름을 입력하세요."> <!-- 실제 입력값을 넣는 필드 -->
+            <!-- 
+                type="text": 일반 텍스트 입력
+                name="name": 서버에 전송할 때 이 필드의 이름
+                id="name": <label>과 연결됨 (접근성 ↑)
+                placeholder: 사용자가 입력하기 전 힌트 제공 
+            -->
+        </div>
+        <div>
+            <label for="tel">전화번호</label>
+            <input type="text" name="tel" id="tel" placeholder="전화번호을 입력하세요.">
+        </div>
+        <div>
+            <label for="email">이메일</label>
+            <input type="email" name="email" id="email" placeholder="이메일을 입력하세요.">
+            <!-- type="email"도 text이지만 email형식으로 작성해야됨. -->
+        </div>
+        <div>
+            <input type="submit" value="전화번호부 입력"> <!-- input 태그의 text를 날리기 위해선 submit을 사용 -->
+        </div>
+        </form>
+    </fieldset>
+
+<!-- </form> -->
+
+    <!-- 로그인 폼  -->
+    <fieldset>
+        <legend>로그인 폼</legend>
+        <form action="login_proc.html" method="post">
+        <input type="text" name="id" id="id" placeholder="아이디"><p>
+        <input type="password" nmae="password" id="password" placeholder="비밀번호"><p>
+        <!-- type="password"는 text이지만 비밀번호 입력할 때 나오는  -->
+        <input type="submit" value="로그인">
+        </form>
+    </fieldset>
+
+    <!-- radio 폼 -->
+    <fieldset>
+        <legend>radio 폼[여러개 중에 한개 선택]</legend>
+        <p>다음 중 마크업 언어로 화면을 표시하는 언어는?</p>
+        <input type="radio" name="etc" id="oneequestion" value="1" checked>1. html <br> <!---->
+        <input type="radio" name="etc" id="oneequestion" value="2">2. java <br>
+        <input type="radio" name="etc" id="oneequestion" value="3">3. css <br>
+        <input type="radio" name="etc" id="oneequestion" value="4">4. javascript <br>
+    </fieldset>
+
+    <!-- select-option 폼(유일하게 input태그를 사용하지 않음) --> 
+    <fieldset>
+        <legend>select-option 폼-범위 내에서 선택[여러개 중에 한개 선택/여러개 중에 여러개 선택/두 개 중 한개]</legend>
+        취미선택:
+        <select name="habit" multiple> <!-- multlple은 다중 선택이 가능하게 해줌 -->
+            <option value="운동">운동</option>
+            <option value="독서">독서</option>
+            <option value="컴퓨터">컴퓨터</option>
+        </select>
+    </fieldset>
+
+    <!-- checkbox 폼 -->
+    <fieldset>
+        <legend>여러 개 선택을 하는 폼[checkbox]</legend>
+        취미선택:
+        <input type="checkbox" name="habit" id="habit" checked>음악
+        <input type="checkbox" name="habit" id="habit" >운동
+        <input type="checkbox" name="habit" id="habit" >독서
+        <input type="checkbox" name="habit" id="habit" >컴퓨터
+    </fieldset>
+    
+    <fieldset>
+        <legend>기타 input</legend>
+        버튼 : <input type="button" value="나는버튼"><br>
+        파일선택 : <input type="file"><br>
+        색선택 : <input type="color"><br>
+        날짜선택 : <input type="date"><br>
+        날짜시간 : <input type="datetime-local"><br>
+        숨김 : <input type="hidden"><br>
+        이미지 : <input type="image"><br>
+        달 선택 : <input type="month"><br>
+        숫자 : <input type="number"><br>
+        범위 : <input type="range"><br>
+        폼 리셋 : <input type="reset"><br>
+        검색 : <input type="search"><br>
+        전화번호 : <input type="tel"><br>
+        시간 : <input type="time"><br>
+        웹 주소 : <input type="url"><br>
+        주 선택 : <input type="week"><br>
+        여러줄의 편집창 : <br><textarea name="" id="" cols="30" rows="10"></textarea>
+    </fieldset>
+
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSSLayoutFloat_3.html</title>
+    <!-- 해당 사이트 페이지 제작 -->
+    <!-- https://www.w3schools.com/html/tryit.asp?filename=tryhtml_layout_float -->
+    <style>
+        #header{
+            width: 100%;
+            height: 100%;
+            background-color: gray;
+            color: white;
+            font-size: 30px;
+            text-align: center;
+            line-height: 100px;
+        }
+        #main{
+            display: flex;
+            padding: 80px 50px;
+        }
+        #aside{
+            width: 30%;
+        }
+        #footer{
+            width: 100%;
+            height: 80%;
+            background-color: gray;
+            color: white;
+            font-size: 30px;
+            text-align: center;
+            line-height: 80px;
+        }
+        * { /* 기본적인 모든 태그에 대해 margin, padding을 0으로 주면 쉽게 디자인에 접근할 수 있다.*/
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">Citites</div>
+        <div id="main">
+            <div id="aside">
+                <ul>
+                    <li><a href="CSSLayoutFloat_1.html">런던</a></li>
+                    <li><a href="CSSLayoutFloat_2.html">도쿄</a></li>
+                    <li><a href="CSSLayoutFloat_3.html">파리</a></li>
+                </ul>
+            </div>
+            <div id="aticle">
+                <h1>Paris</h1>
+                <p>Paris is the capital city of England. It is the most populous city in the  United Kingdom, with a metropolitan area of over 13 million inhabitants.</p>
+                <br>
+                <p>Standing on the River Thames, Paris has been a major settlement for two millennia, its history going back to its founding by the Romans, who named it Londinium.</p>
+            </div>
+        </div>
+        <div id="footer">footer</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>index copy.html</title>
+</head>
+<body>
+    <script>
+        // 1) data.json부터 데이터를 수신한다.
+        /*
+        데이터통신 객체를 만들고,(17)
+        페이지 요청하고,(19) 
+        보내고,(20)
+        수신할 떄 처리하고(21)
+        */
+        let xmlhttp = new XMLHttpRequest(); // XMLHttpRequest는 서버와 비동기적으로 데이터를 주고받을 수 있게 해주는 브라우저 내장 객체 생성
+        console.log(xmlhttp); 
+        xmlhttp.open("get", "data.json"); // HTTP GET 방식으로 data.json이라는 파일을 요청
+        xmlhttp.send(); // 실제로 서버에 요청을 전송
+        xmlhttp.onreadystatechange=function() { // 요청의 상태가 바뀔 때마다 이 함수가 자동으로 호출
+            console.log(xmlhttp.responseText) //responseText : 텍스트로 옴
+            console.log(typeof xmlhttp.responseText) // type : String
+            var data=JSON.parse(xmlhttp.responseText); //문자열을 다시 객체로 변환
+            console.log(typeof data) // type : object
+            // 2) 수신데이터를 반복문을 사용하여 아래코드를 body에 입력한다.
+            let body = document.querySelector("body"); //입력할 객체 얻기
+            data.forEach((obj) =>{ // data배열에서 얻어온 값을 obj에 저장함
+                //console.log(obj);
+                let fw = // fw에 html 코드를 만들어둠(forEach로 pic, name, hp는 생성될때마다 다름)
+                    `
+                    <div>
+                    <img src="${obj.pic}" alt="${obj.pic}" width="100px">
+                    <ul>
+                    <li><span>${obj.name}</span></li>
+                    <li><span>${obj.hp}</span></li>
+                    </ul>
+                    </div>
+                    `;
+                    body.innerHTML += fw; // html코드가 담긴 fw는 body에 innerHTML로 추가 저장함.
+            });
+            console.log("type3:" + typeof JSON.stringify(data)) // 객체를 다시 문자열로 변환하고 무슨 타입인지 확인(타입은 문자열)
+        }
+    </script>
+    <style>
+        img{
+            border: 1px solid black;
+            border-radius: 100%;
+        }
+        li{
+            list-style: none;
+        }
+        div{
+            display: flex;
+        }
+        span{
+            display: inline-block;
+            vertical-align: middle; 
+        }
+    </style>
+</body>
+</html>

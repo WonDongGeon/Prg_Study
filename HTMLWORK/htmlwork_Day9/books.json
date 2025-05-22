@@ -1,0 +1,7 @@
+[
+    {"title": "JavaScript 기초", "author": "홍길동", "price" : "20000"},
+    {"title": "java 기초", "author": "김길동", "price" : "21000"},
+    {"title": "html 기초", "author": "유길동", "price" : "22000"},
+    {"title": "css 기초", "author": "류길동", "price" : "23000"},
+    {"title": "python 기초", "author": "여길동", "price" : "24000"}
+]
