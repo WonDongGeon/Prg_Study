@@ -203,3 +203,13 @@ cd my-react-app
 npm start
 
 ## 만들어지는 파일이 너무 커지기 때문에 만들어진 상태로 github에 올리는데 한계가 있음(github에 업로드하기 위해 p1폴더 삭제)
+
+파일 생성 순서
+p1
+p2
+p3
+p4
+p5
+p6
+reactex
+reactproject
