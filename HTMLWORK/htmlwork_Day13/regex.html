@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>regex.html</title>
+    <script>
+        let a = "test";
+        let rega = /test/; // 정규식표현(리터럴 방식)
+        console.log(rega.test("test"));
+        console.log(a.match(/test/));
+        console.log(a.match(/test/)[0]);
+        console.log(a.match(/test/)["index"]);
+        let index = a.match(/test/)["index"];
+        console.log(a.substring(index));
+    </script>
+</head>
+<body>
+    
+</body>
+</html>
