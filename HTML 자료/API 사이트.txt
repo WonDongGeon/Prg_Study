@@ -1,0 +1,21 @@
+공공데이터포털
+https://www.data.go.kr/
+
+영화진흥원 공공 데이터
+https://www.kobis.or.kr/kobisopenap
+
+kakaoapi
+https://developers.kakao.com
+
+서울시 교통정보과 버스정보 Open API
+https://api.bus.go.kr
+
+google, naver, chatgpt등에서 다양한 api를 지원한다
+
+##api가 지원하는 형태
+json
+xml
+
+##ajax통신의 이해
+
+##정규식의 이해
