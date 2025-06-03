@@ -1,0 +1,43 @@
+- 반디집 설치 후 압축해제
+- eclipse, sts3, sts4 압축해제한 폴더 위치
+
+##이클립스에 관련된 파일
+프로그램실행파일
+작업공간파일
+.m2라이브러리 저장공간
+.p2-플러그인 관리 폴더
+
+이클립스를 실행하면 c:\Users(사용자)\계정폴더 아래에 .m2, .p2폴더가 자동생성됨
+작업공간은 이클립스 실행시 폴더 위치를 정할 수 있음.(c:\Users(사용자)\계정폴더\eclipse-workspace(default))
+이클립스 실행에 필요한 환경정보 c:\users(사용자)\계정폴더\.eclipse
+
+#p2 생성
+STS.exe -data D:\work\sts3-workspace
+STS.exe -data D:\work\sts3-workspace -configuration D:\eclipse_config -Dosgi.instance.area.default = D:\eclipse_instance (p2폴더 생성)
+
+#m2생성
+mkdir m2
+D:\m2\settings.xml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<localRepository>D:/m2/repository</localRepository>
+</settings>
+
+#이클립스에서 settings.xml 등록
+Window > Preferences > Maven > User Settings
+Settings.xml 경로를 D:\m2\settings.xml로 변경
+
+#test maven 프로젝트 생성
+-----------------------------------------
+경로 설정할 때 확인할 것
+
+##이클립스 설정
+eclipse.cmd 파일 생성 후 아래 내용입력(p2생성)
+STS.exe -data D:\work\eclipse-workspace -configuration D:\eclipse_config -Dosgi.instance.area.default = D:\eclipse_instance (p2폴더 생성)
+
+#eclipse.cmd 실행
+
+#이클립스에서 settings.xml 등록
+Window > Preferences > Maven > User Settings
+Settings.xml 경로를 D:\m2\settings.xml로 변경
