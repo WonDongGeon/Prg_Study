@@ -15,5 +15,5 @@ node_modules를 제외한 나머지를 업로드함
 
 Visual Baisc Code에서 Live Server를 설치해줘야 HTML 테스트를 진행할 수 있음
 Eclipse에서는 JSP를 진행하는데 데이터베이스와 연결하여 진행함(h2, oracle)
-Eclipse 진행 전 톰캣, h2, oracle 설치를 하고 설정 뒤 진행
+Eclipse 진행 전 tomcat, h2, oracle 설치를 하고 설정 뒤 진행
 ```
