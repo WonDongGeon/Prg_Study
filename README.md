@@ -8,9 +8,8 @@ Visual Basic Code를 이용한 HTML 공부 코드 (HTMLWORK)
 ```
 Eclipse를 이용한 JSP 공부 코드 (JSP)
 ```
-
-```
 --주의사항--
+```
 HTMLWORK_Day11,12는 webpack을 진행하는데, node_modules 폴더의 내용이 너무 커서 업로드가 불가능함  
 node_modules를 제외한 나머지를 업로드함
 ```
