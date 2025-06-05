@@ -1,0 +1,24 @@
+## 서블릿 등록
+Hello.java파일 생성하고 web.xml파일에서 서블릿 등록
+url에 이해 서블릿이 동작하며 이 동작은 어노테이션(@)를 사용하여 쉽게 해결:info.java @WebServlet("/info")
+
+#info.java : request, response를 사용하여 header, body의 내용 확인
+## 클라이언트에서 서버로 전달되는 텍스트인 한글이 깨지지 않게 처리하는 방법
+request.setCharacterEncoding("utf-8");
+
+## 서버에서 클라이언트로 전송되는 한글이 깨지지 않게 처리하는 방법
+response.setCharacterEncoding("utf-8);
+response.setContentType("text/html;charset=utf-8");
+
+#request, response객체에 있는 함수들을 대부분 숙지
+데이터전송하는 객체 생성 : response.getWriter();
+전달되는 값을 받기 위한 함수 : request.getParameter("inse");
+정수변환 객체 : Integer.parseInt(request.getParameter("re"));
+
+#request를 통해서 어떤 값을 수신할 수 있는지 확인
+http프로토콜은 header와 body로 구성된다.
+header는 설정은 관한사항 포함(밖으로 볼 수 없고 도구를 이용확인)
+body는(<html></html>)보내는 데이터의 전부
+
+##Routes.java
+하나의 서브릿 파일로 uri를 분석하여 url처리
