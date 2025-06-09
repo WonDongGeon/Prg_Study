@@ -1,0 +1,68 @@
+cmd에서 오라클 데이터베이스 명령어 입력(시퀀스, 테이블 생성하고 commit(완료))
+
+C:\Users\seoil>sqlplus
+
+SQL*Plus: Release 11.2.0.2.0 Production on 화 6월 3 17:46:37 2025
+
+Copyright (c) 1982, 2014, Oracle.  All rights reserved.
+
+Enter user-name: night
+Enter password:
+
+Connected to:
+Oracle Database 11g Express Edition Release 11.2.0.2.0 - 64bit Production
+
+SQL> create sequence pb_id_seq;
+
+Sequence created.
+
+SQL> create table phonebook(
+  2  id number(3),
+  3  name varchar(50),
+  4  hp varchar(13),
+  5  email varchar2(50),
+  6  memo varchar2(100)
+  7  );
+
+Table created.
+
+SQL> insert into phonebook values(pb_id_seq.nextval, '홍길동', '010-1111-1111', 'hong@my.com', 'hello');
+
+1 row created.
+
+SQL> select * from phonebook;
+
+        ID
+----------
+NAME
+--------------------------------------------------------------------------------
+HP
+--------------------------
+EMAIL
+--------------------------------------------------------------------------------
+MEMO
+--------------------------------------------------------------------------------
+         1
+홍길동
+010-1111-1111
+
+        ID
+----------
+NAME
+--------------------------------------------------------------------------------
+HP
+--------------------------
+EMAIL
+--------------------------------------------------------------------------------
+MEMO
+--------------------------------------------------------------------------------
+hong@my.com
+hello
+
+
+SQL> commit;
+
+Commit complete.
+
+-- 오라클 jar 파일 경로 --
+C:\oraclexe\app\oracle\product\11.2.0\server\jdbc\lib 
