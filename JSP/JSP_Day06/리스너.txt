@@ -1,0 +1,59 @@
+##데이터 저장하는 영역
+request, session, context(application)
+
+##파라메다
+전역 파라메다(Context)
+서블릿 클래스 파라메다(web.xml에서 
+  <servlet>
+  <init-param>
+  <param-name>password</param-name>
+  <param-value></param-value>
+  </init-param> 
+  </servlet>
+)
+
+##web.xml에서 정보를 저장하는 방법
+#전역파라메다
+<context-param>
+<param-name>driver</param-name>
+<param-value>org.h2.Driver</param-value>
+</context-param> 
+#객체파라메다
+<servlet>
+  <servlet-name>membercontroller</servlet-name>
+  <servlet-class>member.MemberController</servlet-class>
+  <init-param>
+  <param-name>secpassword</param-name>
+  <param-value>1234</param-value>
+  </init-param>
+ </servlet>
+
+##서블릿
+객체는 반드시 HttpServlet을 상속(extends)받아야 web.xml에 서블릿으로 등록할 수 있음
+<servlet></servlet>등록
+
+##리스너
+객체는 반드시 ServletContextListener  implements(구현)해야함
+<listener>
+<listener-class>member.DBConfigListener</listener-class>
+</listener> 
+
+##사용법
+서블릿에서 객체에 접근하는 함수:getServletConfig()
+getServletConfig().getInitParameter("driver")
+
+서블릿에서 전역객체에 접근하는 함수:getServletContext()
+getServletContext().getInitParameter("driver"));
+
+생성자에서는 config, context를 사용할 수 없으므로 init()함수를 호출하여 사용
+
+config를 사용할 경우 public void init(ServletConfig config)를 사용
+
+context를 사용할 경우 
+public void init(ServletConfig config)에서 
+super.init(config);를 호출하고
+init()함수에서 아래와 같이 context를 전달하여 사용
+public void init(){
+service=new MemberService(getServletContext());
+}
+##필터
