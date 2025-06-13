@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>index.html</h1>
+<ul>
+<li onclick="requestcall(this.innerText)">GET</li>
+<li onclick="requestcall(this.innerText)">POST</li>
+<li onclick="requestcall(this.innerText)">PUT</li>
+<li onclick="requestcall(this.innerText)">DELETE</li>
+</ul>
+<script>
+function requestcall(method){
+let xhttp=new XMLHttpRequest();
+console.log(xhttp);
+//xhttp.open("POST", "/member",true); //GET, POST, PUT, DELETE
+xhttp.open(method, "/member",true);
+xhttp.send();
+xhttp.onload = function() {
+    console.log("응답:", xhttp.responseText);
+};
+}
+</script>
+</body>
+</html>
