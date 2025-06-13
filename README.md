@@ -1,6 +1,6 @@
-# HTML 
+# Study
 
-HTML 공부한 코드 실습 파일(설명은 주석 및 텍스트 파일)
+학습한 내용 코드 파일(설명은 주석 및 텍스트 파일)
 
 ```
 Visual Basic Code를 이용한 HTML 공부 코드 (HTMLWORK)
