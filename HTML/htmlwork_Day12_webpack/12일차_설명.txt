@@ -1,0 +1,175 @@
+12일차 설명
+
+React에 대한 설명
+
+npm uninstall -g create-react-app. => 오류발생시
+npx create-react-app my-react-app
+mkdir reactwork
+cd reactworknpx create-react-app myapp
+
+실행방법
+cd reactproject
+cd my-react-app
+npm start
+
+#import의 사용법 정리
+import logo from './logo.svg'; => logo라는 문자가 변수 역할{logo}
+import from './App.css'; => 외부 파일을 가지고 와서 사용한다.(포함 - CSS 적용)
+import React from 'react'; or import App from './App'; => 객체 사용
+객체를 사용할 경우 export default App(함수명) => <App/>사용가능
+
+익명함수 : function() {}, ()=>{} 
+const myList = myArray.map((item) => <p>{item}</p>)
+
+import { name, age } from "./person.js";
+import message from "./message.js";
+
+
+---------------------------------------------------------------------------------------------
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<App />);
+---------------변수의 상태변화 때 실행하는 useEffect함수처리(hook처리)----
+//라이브러리 포함하기
+//import { useState } from "react";
+import ReactDOM from "react-dom/client";
+
+//어떤 상태가 변화되었을 때 실행하는 코드
+import React,{useState, useEffect} from "react";
+
+//사용할 기능을 함수로 만들기(상태변수선언, 상태변화실행함수(useEffect), 화면에 표시할 return 태그)
+function Counter(){
+  //상태변수선언
+  const [count, setCount]=useState(0);
+
+  //상태변화실행함수(useEffect)
+  useEffect(()=>{
+    console.log(`현재 카운터:${count}`)
+  },[count]);
+  //화면에 표시할 return 태그 (<> </> or ( ) 멀티라인가능)
+  return (
+    <div>
+      <div>카운터:{count}</div>
+      <button onClick={()=>setCount(count+1)}>숫자 증가하기</button>
+    </div>
+  );
+}
+//메인실행코드
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<Counter />);
+
+----------------전화번호부 json파일을 xmlhttprequest로 처리하기------
+##public폴더에 data.json
+[
+    {
+      "id": 1,
+      "name": "홍길동",
+      "phone": "010-1234-5678"
+    },
+    {
+      "id": 2,
+      "name": "김철수",
+      "phone": "010-9876-5432"
+    }
+  ]
+  
+
+#PhonebookList.js
+import React,{useState, useEffect} from "react";
+import ReactDOM from "react-dom/client";
+
+function PhonebookList(){
+  //useEffect();호출될 때 데이터가 수신될 경우 이를 저장할 상태변수 미리선언
+  const [contacts,setContacts]=useState([]);
+
+  //최초 호출이 한번 일어난다!!
+  useEffect(()=>{
+    console.log("호출!!");
+    const xhttp=new XMLHttpRequest();
+    xhttp.open("get","data.json");
+    xhttp.send();
+    xhttp.onload=function(){
+      let data=JSON.parse(xhttp.responseText);
+      setContacts(data);
+      console.log(contacts);
+    }
+
+  });
+
+ return <>
+  <div>
+  {contacts.map(contact => (
+    <ul>
+          <li>{contact.id}</li>
+          <li>{contact.name}</li>
+          <li>{contact.phone}</li>
+    </ul>
+   ))}
+  </div>
+  </>
+}
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(<PhonebookList />);
+
+##스타일 추가하기
+<ul style={{listStyle:'none', border:'1px solid black', padding:0}}>
+
+##확인사항
+여러번 반복하는 사항 해결(상태변수 적어줌)
+useEffect(()=>{},[]);
+
+오류코드 확인(Each child in a list should have a unique "key" prop.)
+<ul key={contact.id} > 코드 추가
+
+##에러변수를 추가한 코드
+import React, { useEffect, useState } from 'react';
+
+const Phonebook = () => {
+  const [contacts, setContacts] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', 'data.json', true); // 실제 API 주소로 변경
+
+    xhr.onload = function () {
+      console.log(xhr.responseText)
+      if (xhr.status === 200) {
+        try {
+          const data = JSON.parse(xhr.responseText);
+          setContacts(data);
+        } catch (err) {
+          setError('데이터 파싱 오류');
+        }
+      } else {
+        setError(`에러 발생: ${xhr.status}`);
+      }
+    };
+
+    xhr.onerror = function () {
+      setError('네트워크 오류');
+    };
+
+    xhr.send();
+  }, []);
+
+  if (error) {
+    return <div>오류: {error}</div>;
+  }
+
+  return (
+    <div style={{ padding: '20px', fontFamily: 'sans-serif' }}>
+      <h1 style={{ fontSize: '24px', marginBottom: '16px' }}>전화번호부</h1>
+      <ul style={{ listStyle: 'none', padding: 0 }}>
+        {contacts.map(contact => (
+          <li key={contact.id} style={{ marginBottom: '10px', border: '1px solid #ccc', padding: '8px', borderRadius: '4px' }}>
+            <strong>{contact.name}</strong>: {contact.phone}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default Phonebook;
