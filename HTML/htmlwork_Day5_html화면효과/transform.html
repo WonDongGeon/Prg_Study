@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>transform.html</title>
+    <style> 
+        div {
+          width: 300px;
+          height: 100px;
+          background-color: yellow;
+          border: 1px solid black;
+          /* transition: transform 2s ease-in; 	천천히 시작하고, 점점 빨라짐 */
+          transition: transform 2s ease-in-out; /* jquery fadein fadeout 확인 천천히 시작하고, 천천히 끝남 */
+          transform: rotate(90deg); /* 90도 수직 */
+          
+          /* position:relative, top, left는 한 쌍 */
+          position: relative;
+          top: 200px;
+          left: 100px;
+        }
+        div:hover{
+            /* transform: translate(50px, 100px); x축으로 50px, y축으로 100px 이동 */
+
+            /* transform: rotate(180deg); 180도 수평 */
+            /* transform: scale(1, 2); 첫번째는 너비에 대한 부분, 두번째는 크기에 대한 부분 : 이 두 부분에 대한 확대 */
+            /* transform: skewX(45deg); x축 45도로 기운다 */
+            transform: matrix(1, -0.3, 0, 1, 0, 0); /* matrix(scaleX(), skewY(), skewX(), scaleY(), translateX(), translateY()) */
+
+            /* 정리 : rotate : 회전, scale : 확대, translate : 이동 */
+        }
+        </style>
+</head>
+<body>
+    <div>
+    </div>
+</body>
+</html>

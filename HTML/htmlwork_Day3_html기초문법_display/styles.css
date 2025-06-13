@@ -1,0 +1,5 @@
+div{ /* style_href_target.html 파일과 연결됨 */
+    width: 100px;
+    height: 100px;
+    background-color: red;
+}

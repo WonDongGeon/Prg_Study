@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wrap.html</title>
+    <style>
+        .box{
+            border: 1px solid black;
+            /* width: 50%; */
+            font-size: 30px;
+            display: flex;
+            flex-wrap: wrap; /* 태그마다 줄바꿈 역할 */
+            
+        }
+        .box2{
+            /* 문제 : display를 flex와 flex-wrap을 사용하지 않고 자동 줄바꿈 하는 방법? */
+            border: 1px solid red;
+            word-wrap: break-word; /* 텍스트가 컨테이너의 너비를 초과할 경우, 단어가 끊어져서 줄 바꿈 */
+            overflow-wrap: break-word; /* 텍스트가 넘치는 경우에 대해 처리하고, break-word는 텍스트가 너무 길어서 단어가 넘칠 때 그 단어를 중간에 끊어줍니다 */
+        }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <span>awdawfawfawfawgawgsasasdfasfasfadfasdfasfas</span>
+        <span>231614621362136123612</span>
+        <span>awdawfawfawfawgawgsas</span>
+        <span>231614621362136123612</span>
+        <span>awdawfawfawfawgawgsas</span>
+        <span>231614621362136123612</span>
+        <span>awdawfawfawfawgawgsas</span>
+        <span>231614621362136123612</span>
+        <span>awdawfawfawfawgawgsas</span>
+        <span>231614621362136123612</span>
+    </div>
+
+    <div class="box2" style="font-size: 500px;">
+        kekekaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    </div>
+</body>
+</html>

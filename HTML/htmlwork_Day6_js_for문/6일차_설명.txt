@@ -1,0 +1,6 @@
+for 반복문의 종류와 변수 타입에 대한 설명
+
+파일 생성 순서
+
+forexam.html
+foreaxm2.html
