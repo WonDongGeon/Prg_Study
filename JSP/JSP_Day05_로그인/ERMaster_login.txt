@@ -1,0 +1,76 @@
+사이트 목적 : 인터넷 쇼핑몰
+목표 : 물품 판매
+누가 사용하는가 ?(액터) : 고객, 직원, 카드사승인
+메인사용자? : 고객
+-고객은 물품을 구매한다.
+고객은 회원가입한다.(고객테이블에 값을 입력을 의미)
+고객은 로그인을 한다.(선택출력으로 값을 확인)
+고객은 물품을 검색한다.
+고객은 물품을 구매한다.
+
+*)입력, 전체출력, 선택출력, 수정, 삭제
+-ERmaster(sts3에서 실행)
+eclipse 메뉴-help-install new software 
+add버튼클릭
+name:ERMaster
+location: http://ermaster.sourceforge.net/update-site
+ERMaster체크상자 체크 후 next클릭
+
+##프로그램 개발과정
+요구사항분석-화면설계/DB설계-구현-테스트-배포-유지보수
+
+##회원관리
+
+#요구사항분석
+회원정보를 무엇으로 할 것인가? 아이디, 비밀번호, 전화번호, 이메일, 주소, 사진
+회원의 기능은? 회원가입, 로그인, 수정, 탈퇴, 비밀번호 찾기, 아이디 찾기
+
+#DB설계
+정보테이블(필드), 폼에서 name, 자바 VO(Value Object)객체
+
+#화면설계
+피그마를 이용한 기능에 대한 화면 구성
+
+ERMaster : DB설계-테이블 생성 명령어 자동생성-자바vo객체 생성-보고서형태의 문서파일이 자동 생성
+
+예제)물품의 테이블을 생성, 구매테이블은 맴버테이블과 물품테이블의 중간에 위치하는 테이블로 생성
+물품의 테이블을 생성(자바VO객체)
+물품의 테이블 필드 : 물품번호(id)(P), 물품명(name), 재고수량(qn),가격(price)
+
+회원과 물품의 관계 : 
+회원은 물품을 구매한다.
+물품은 회원에게 구매되어진다.
+
+구매테이블 : 1:1, 1:n, n:n
+가정1:한명의 회원이 있고, 물품이 한개 있다고 가정할 때 한명은 회원은 한개의 물품을 여러개 구매 가능(o,x) 1:n
+한명의 회원은 n개의 물품을 구매한다.
+구매테이블 필드: 회원(아이디),물품(물품번호),구매수량 
+
+가정2:한명의 회원의 한개의 물품을 여러번 구매가능(o,x)->1:n 
+구매테이블 필드: 회원(아이디),물품(물품번호)
+
+##로그인처리
+<form action="login_proc.jsp" method="post">
+<input type="text" name="id" id="id" placeholder="아이디"><br>
+<input type="password" name="password" id="password" 
+placeholder="패스워드"><br>
+<a href="#">회원가입</a>
+<a href="#">아이디찾기</a>/<a href="#">패스워드찾기</a><br>
+<input type="submit" value="로그인">
+</form>
+1)폼에서 전송된 값을 전달받는다.
+2)전송받은 값을 확인한다.
+3)전송받은 값을 저장한다.(로그인여부확인)
+4)다른페이지에서 확인한다.
+
+##jsp에서 값을 저장하는 방법
+request객체이용: request.setAttribute("id","admin");	
+session객체이용: request.getSession().setAttribute("id","admin");
+context객체이용(application): request.getServletContext().setAttribute("id","admin");
+
+##jsp파일을 서블릿을 이용한 uri로 변경처리
+페이지 호출에 대한 jsp파일을 uri명령으로 변환정리
+로그인폼열기-login.jsp-xxxx(uri명령)
+로그인처리-login_proc.jsp-xxxx(uri명령)
+로그아웃-logout.jsp-xxxx(uri명령)
+
