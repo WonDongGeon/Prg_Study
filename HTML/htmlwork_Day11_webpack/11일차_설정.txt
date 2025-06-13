@@ -1,0 +1,215 @@
+--------------------------------js파일만을 배포하기 위한 webpack(p1)--------------------------------
+
+npm init -y
+npm install --save-dev webpack
+npm install --save-dev webpack -cli
+
+-> p1폴더 생성 
+-> Terminal에서 cd p1(p1폴더로 이동) 
+-> npm init -y : node.js 폴더 초기화(package.json 생성)
+-> 웹팩라이브러리 설치(npm install --save-dev webpack 
+-> npm install --save-dev webpack -cli)
+
+##app.js <- 출력 확인용
+console.log('webpack test');
+
+##webpack.config.js파일 생성(webpack설정 파일 작성)
+const path = require("path"); // require는 "path" 라이브러리를 들고오는 함수
+
+module.exports={
+    node:"development",
+    entry:{main:"./app.js",}, 
+    output:{
+        filename:"[name].js",
+        path:path.resolve(__dirname, "dist")
+    }, //출력문
+}
+
+설명 : 주의사항 ./은 현재폴더에 app.js를 진입점 
+[name]은 entry의 main키값을 의미하며 main.js파일이 dist폴더안에 생성
+main.js파일이 dist폴더 안에 생성됨을 의미(dist/main.js파일생성)
+output의 path부분을 삭제한 후 실행(도 해볼 것)
+
+##webpack 컴파일(실행)
+npx webpack
+설명:dist폴더는 배포디렉토리이며 해당폴더에 main.js생성
+
+--------------------------------css파일을 배포파일인 dist/main.js에 포함시키기(css+js = main.js)(p2)--------------------------------
+
+npm init -y
+npm install --save-dev webpack
+npm install --save-dev webpack -cli
+npm install --save-dev style-loader
+npm install --save-dev css-loader
+
+-> p2폴더 생성 
+-> Terminal에서 cd p2(p2폴더로 이동) 
+-> npm init -y : node.js 폴더 초기화(package.json 생성)
+-> 웹팩라이브러리 설치(npm install --save-dev webpack)
+-> npm install --save-dev webpack -cli
+-> npm install --save-dev style-loader
+-> npm install --save-dev css-loader
+
+##webpack.config.js(위에서 추가한 부분 : module에 추가함)
+module.exports={
+    module:{
+        rules:[
+            {
+            test:/\.css$/, //  /\ : 모든,  $/ : 끝
+            use:["style-loader", "css-loader"]
+            }
+        ]
+    }
+}
+
+##style.css
+body {
+    background-color: aqua;
+}
+
+##app.js
+import './style.css'
+console.log('webpack test');
+
+##webpack컴파일
+npx webpack
+
+##index.html파일에서 컴파일인 dist폴더의 main.js가 정상동작하는지 확인
+<script src = "./dist/main.js"></script>
+
+--------------------------------html+js 포함하여 배포파일만들기(p3)--------------------------------
+
+npm init -y
+npm install --save-dev webpack
+npm install --save-dev webpack -cli
+npm install --save-dev style-loader
+npm install --save-dev css-loader
+npm install --save-dev html-webpack-plugin
+
+##webpack.config.js
+const HtmlWebpackPlugin = reuire("html-webpack-plugin");
+plugins:[
+            new HtmlWebpackPlugin({
+                template:'./index.html',
+                filename:'index.html',
+                chunks:['pc']
+            })
+        ]
+
+설명 : index.html파일을 폴더에 생성한 후 npx webpack을 실행하면
+dist 배포폴더에 app.js와 index.html파일이 같이 생성되는 것을 확인
+index.html파일은 파일내용은 변하지 않음
+<script src ="./app.js"></script>주의해서 설정할 것
+
+--------------------------------html파일에 css, js를 포함하여 배포파일만들기--------------------------------
+
+npm init -y
+npm install --save-dev webpack
+npm install --save-dev webpack -cli
+npm install --save-dev style-loader
+npm install --save-dev css-loader
+npm install --save-dev html-webpack-plugin
+npm install --save-dev mini-css-extract-plugin
+npm install --save-dev copy-webpack-plugin
+
+프로젝파일에
+index.html파일생성
+index.js, index.css파일생성
+index.js파일안에 index.css파일을 import(포함)하고 index.css파일은 빈파일 유지
+
+##index.html
+링크와 스크립트 없는 상태의 기본 html코드만 포함(!tab)
+
+##index.js
+import './index.css'
+
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const path = require("path"); // require는 "path" 라이브러리를 들고오는 함수
+module.exports={
+    mode:"development", // 개발용 설정 (디버깅이 쉬움, 난독화 안 됨). 배포 시에는 "production"으로 변경
+
+    entry:{main:"./index.js",}, //진입점
+
+    output:{
+        path:path.resolve(__dirname, "freedirectory"), // __dirname : 현재 경로, freedirectory라는 폴더를 만들 수 있음
+        filename:"[name].js",
+    }, 
+
+    module:{
+        rules:[
+            {
+            test:/\.css$/i, //  \ : 앞의 모든 파일,  / : 로 끝나는 모든 파일
+            use:[MiniCssExtractPlugin.loader, "css-loader"]
+            }
+        ]
+    },
+
+    plugins:[
+        new HtmlWebpackPlugin({
+            template:'./index.html',
+            filename:'index.html',
+            chunks:['index'] // chunks : 덩어리(규격)
+        }),
+        new MiniCssExtractPlugin(),
+    ]
+}
+
+설명
+entry : {index: "./index.js",} => [name]은 index를 의미한다.
+filename : "[name].js" => index.js를 뜻한다.
+path:path.resolve(__dirname, "freedirectory") => dirname은 현재 디렉토리를 의미하고
+현재 디렉토리에 freedirectory라는 디렉토리를 배포 디렉토리이름으로 사용하겠다는 의미
+test:/\.css$/i => i는 정규식의 대소문자를 구분하지 않는다는 의미하고
+template:'./index.html' => 템플릿파일(원본)을 의미하고
+filename:'index.html', => 배포파일안의 이름을 지정
+chunks:['index'] => 규격을 확인하기 위한 수단
+
+npx webpack을 실행하면 index.html파일에 다음 코드가 추가되어 배포된 코드가 생성됨.
+<script defer src="index.js"></script><link href="index.css" rel="stylesheet">
+
+--------------------------------html파일에 css, js 링크를 포함하는 2개 이상의 배포파일 만들기(p5)--------------------------------
+
+webview.html, pc.html 2개의 파일에 대한 webpack설정
+##webview.html, webview.js webview.css 파일생성
+##pc.html, pc.js, pc.css 파일생성
+##webpack.config.js 파일생성
+
+##webpack.js파일에 import './webview.css
+##pc.js파일에 import './pc.css'
+
+##webpack.config.js
+entry:{webview:"./webview.js", pc:"./pc.js",},
+plugins:[
+        new HtmlWebpackPlugin({
+            template:'./webview.html',
+            filename:'webview.html',
+            chunks:['webview', 'pc'] // chunks : 덩어리(규격) <- 생성된 html 파일 보면 webview, pc 둘다 연결하는 script scr랑 link가 생성됨
+        }),
+        new HtmlWebpackPlugin({
+            template:'./pc.html',
+            filename:'pc.html',
+            chunks:['pc'] // chunks : 덩어리(규격)
+        }),
+        new MiniCssExtractPlugin(),
+    ]
+
+react에 대한 활용 방법
+reactex
+
+npm uninstall -g create-react-app.
+npx create-react-app my-react-app
+cd my-react-app
+npm start
+
+## 만들어지는 파일이 너무 커지기 때문에 만들어진 상태로 github에 올리는데 한계가 있음(github에 업로드하기 위해 p1폴더 삭제)
+
+파일 생성 순서
+p1
+p2
+p3
+p4
+p5
+p6
+reactex
+reactproject
