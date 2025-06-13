@@ -1,0 +1,71 @@
+<!-- bootstrap을 이용한 로그인 화면 직접 만들기 -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body>
+<form action="" class="p-3">
+
+    <div class="mb-3 mt-3">
+        <h1>회원가입</h1>
+        <div class="row">
+            <div class="col-6">
+                <label for="name" class="form-label">이름</label>
+                <input type="text" class="form-control" name="" id="" placeholder="">
+            </div>
+            <div class="col-6">
+                <label for="nickname" class="form-label">별명</label>
+                <input type="text" class="form-control" name="" id="" placeholder="">
+            </div>
+        </div>
+    </div>
+
+    <div class="mb-3 mt-3"></div>
+        <div>
+            <label for="email" class="form-label">이메일</label>
+            <input type="email" class="form-control" name="" id="" placeholder="">
+        </div><br>
+        <div>
+            <label for="address" class="form-label">주소</label>
+            <input type="text" class="form-control" name="" id="" placeholder="">
+        </div><br>
+        <div>
+            <label for="address" class="form-label">상세주소(필수X)</label>
+            <input type="text" class="form-control" name="" id="" placeholder="상세주소를 입력해주세요">
+        </div>
+    </div>
+
+    <div class="mb-3 mt-3">
+        <div class="row">
+            <div class="col-8">
+                <label for="address" class="form-label">가입경로</label>
+                <select class="form-select" id="path" name="path">
+                    <option>인터넷</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                </select>
+            </div>
+            <div class="col-4">
+                <label for="address" class="form-label">추천인 코드</label>
+                <input type="text" class="form-control" name="" id="" placeholder="">
+            </div>
+        </div>
+    </div>
+    <hr>
+
+        <div class="mb-3 mt-3">
+            <input type="checkbox" class="form-check-input"> 개인정보 수집 및 이용에 동의합니다.<br>
+        </div>
+        <div>
+            <input type="submit" class="btn btn-primary w-100" value="가입완료">
+        </div>
+
+</form>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>interval.html</title>
+</head>
+<body>
+    <div></div>
+    <button onclick="clearInterval(tf)">시계 멈춤</button> 
+    <!-- clearInterval은 setInterval로 반복중인 작업을 중지시킴 -->
+</body>
+</html>
+<script>
+    let t = new Date();
+    document.querySelector("div").textContent = t;
+
+    var tf = setInterval(() => {
+        let t = new Date();
+        document.querySelector("div").textContent = t
+    }, 1000); //1초마다 updateClock() 실행
+
+    setTimeout(() => { // 일정한 시간이 지났을 때 실행
+        clearInterval(tf);
+    }, 10000); // 10초후 clearInterval로 setInterval 작업을 중지시킴
+</script>

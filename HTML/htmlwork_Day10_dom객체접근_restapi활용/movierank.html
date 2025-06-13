@@ -1,0 +1,42 @@
+<!-- 
+rank 순위
+rankInten 전일대비 순위의 증감분
+movieNm 영화명
+openDt 해당일에 관객수
+audiAcc 누적 관객수
+
+boxOfficeRuselt.dailyBoxOfficeLust[0].movieNm
+boxOfficeResult["dailyBoxOfficeList"][0]["moiveNm"] 
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>movierank.html</title>
+    <script>
+        const xhttp = new XMLHttpRequest();
+        let method = "get";      
+        let apikey= "e918a92a015e7309e5b41d92a949bccc"; // 발급받은 키
+        let targetDt = "20250520"; // 정보중에 어떤 변화값이 있을 경우 결과가 달라질 떄 변수 설정
+        let url = `http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${apikey}&targetDt=${targetDt}`;
+        xhttp.open(method, url);
+        xhttp.send();
+        xhttp.onload = function() {
+            console.log(xhttp.responseText);
+            let data = JSON.parse(xhttp.responseText);
+
+            //console.log(data.boxOfficeResult.dailyBoxOfficeList[0].movieNm);
+            //console.log(data.boxOfficeResult["dailyBoxOfficeList"][0]["movieNm"]);
+
+            for(i = 0; i < 10; i++) {
+                console.log(data.boxOfficeResult.dailyBoxOfficeList[0].movieNm);
+            }
+                   
+        }
+    </script>
+</head>
+<body>
+    
+</body>
+</html>

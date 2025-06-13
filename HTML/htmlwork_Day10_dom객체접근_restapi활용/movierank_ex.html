@@ -1,0 +1,142 @@
+<!-- 
+rank 순위
+rankInten 전일대비 순위의 증감분
+movieNm 영화명
+openDt 해당일에 관객수
+audiAcc 누적 관객수
+
+boxOfficeRuselt.dailyBoxOfficeLust[0].movieNm
+boxOfficeResult["dailyBoxOfficeList"][0]["moiveNm"] 
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>movierank_ex.html</title>
+    <script>
+        
+    </script>
+</head>
+<body style="text-align: center; width: 700px; height: 700px;">
+    <h1 style="background-color: green;">일별 박스오피스</h1>
+    <div >
+        <input type="text" name="year" id="year" style="width: 60px; text-align: right;" value="2025">년
+        
+        <select name="month" id="month">
+        </select>
+
+        <select name="day" id="day">
+        </select>
+        
+        <input type="button" name="searchbtn" id="searchbtn" value="확인">
+    </div><br>
+    <div style="border: 2px solid black;">
+        <ul id="list" style="list-style-type: none;">
+
+        </ul>
+    </div>
+    <script>
+        //코드에서 반복이 발생하는 부분은 반복문을 이용하여 처리한다.
+        //html에 반복되는 구문에 대한 태그추가(월, 일)
+        //월에 대한 option 태그르 만들고 속성과 태그값을 입력하여 select구문에 추가
+        let month = document.getElementById("month");
+        for(i = 1; i < 13; i++) { // 드롭다운에 1월부터 12월 옵션을 동적으로 추가
+            let option = document.createElement("option"); // 없는 option 태그 추가
+            option.value = i; // 생성된 option 값
+            option.textContent = `${i}월`; // option 텍스트
+            month.appendChild(option); // month라는 id를 가진 select태그에 option 자식을 추가함.
+        }
+        let day = document.getElementById("day");
+        for(i = 1; i < 32; i++) { // 드롭다운에 1일부터 31일 옵션을 동적으로 추가
+            let option  = document.createElement("option"); // 없는 option 태그 추가
+            option.value = i; // 생성된 option 값 
+            option.textContent = `${i}일` // option 텍스트
+            day.appendChild(option); // day라는 id를 가진 select태그에 option 자식을 추가함.
+        }
+
+        function callist(targetDt) { // targetDt는 요청 날짜 (예: 20250521).
+        // KOBIS(영화진흥위원회)에서 제공하는 박스오피스 데이터를 GET 요청으로 불러옴.
+        const xhttp = new XMLHttpRequest();
+        let method = "get";      
+        let apikey= "e918a92a015e7309e5b41d92a949bccc"; // 발급받은 키
+        // let targetDt = `20250520`; // 정보중에 어떤 변화값이 있을 경우 결과가 달라질 떄 변수 설정
+        let url = `http://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=${apikey}&targetDt=${targetDt}`;
+        xhttp.open(method, url);
+        xhttp.send();
+            xhttp.onload = function() {
+                // console.log(xhttp.responseText);
+                let data = JSON.parse(xhttp.responseText);
+                for(i = 0; i < 10; i++) { // 1~10위까지 반복하면서, 순위(rank), 증감(rankInten), 영화명(movieNm)을 꺼냄.
+                    // console.log(data.boxOfficeResult.dailyBoxOfficeList[0].movieNm);
+                    let rank = data.boxOfficeResult.dailyBoxOfficeList[i].rank; // 순위
+                    let rankInten = data.boxOfficeResult.dailyBoxOfficeList[i].rankInten; // 증감 
+                    let movieNm = data.boxOfficeResult.dailyBoxOfficeList[i].movieNm; // 영화명
+                    let liststr =`${rank}위(${rankInten}):${movieNm}`;
+                    console.log(liststr);
+                    console.log(typeof rankInten); //문자열
+                    console.log(typeof parseInt(rankInten)); //숫자형으로 변환
+
+                    //삼항 연산자
+                    // let result = 1>0 ? "참" : "거짓";
+                    // console.log(result);
+
+                    // let result = parseInt(rankInten)>0 ? "양수" : parseInt(rankInten)<0 ? "음수" : "0";
+                    // console.log(result);
+
+                    // rankInten 값이 +면 ▲, -면 ▼, 0이면 그대로 표시.
+                    let num = parseInt(rankInten);
+                    let result = num>0 ? `▲${Math.abs(num)}` : num<0 ? `▼${Math.abs(num)}` : num;
+                    console.log(result);
+
+                    liststr = `${rank}위(${result}):${movieNm}`;
+                    let list = document.getElementById("list"); //ul
+                    let li = document.createElement("li"); //li태그가 없기 떄문에 만들어줌
+                    li.textContent=liststr;
+                    list.appendChild(li);
+                }  
+            }
+        }
+
+    //버튼 이벤트 등록(태그의 객체를 얻기, 얻은 태그를 이벤트 등록하기, 처리하기)
+    let searchbtn = document.getElementById("searchbtn");
+    searchbtn.addEventListener("click", function(){
+        let year = document.getElementById("year").value;
+        let month = document.getElementById("month").value;
+        let day = document.getElementById("day").value;
+        console.log(`${year}${month}${day}`);
+        //문제점 2025년1월1일이 선택이 될 경우 202511의 결과가 나타남
+        //202511 -> 20250101
+        //1~9월/일은 01~09로 보정해야 API에서 정상 인식됨.
+        console.log("문자열 길이 : " + month.length);
+        console.log(month.length < 2 ? "0"+month : month);
+        month = month.length < 2 ? "0"+month : month;
+        day = day.length < 2 ? "0"+day : day;
+
+        let list = document.getElementById("list");
+        list.textContent = "";
+        callist(`${year}${month}${day}`); // 날짜 조합 후 callist 함수 호출.
+    });
+
+    //사용자가 편의성을 이용한 이벤트 코드 구현(일을 변경할 떄)
+    document.getElementById("day").addEventListener("change", function(){
+        let year = document.getElementById("year").value;
+        let month = document.getElementById("month").value;
+        let day = document.getElementById("day").value;
+        console.log(`${year}${month}${day}`);
+
+        //문제점 2025년1월1일이 선택이 될 경우 202511의 결과가 나타남
+        //202511 -> 20250101
+        console.log("문자열 길이 : " + month.length);
+        console.log(month.length < 2 ? "0"+month : month);
+
+        month = month.length < 2 ? "0"+month : month;
+        day = day.length < 2 ? "0"+day : day;
+
+        let list = document.getElementById("list");
+        list.textContent = "";
+        callist(`${year}${month}${day}`);
+    });
+    </script>
+</body>
+</html>
