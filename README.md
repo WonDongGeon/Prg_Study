@@ -6,7 +6,7 @@
 Visual Basic Code를 이용한 HTML 공부 코드 (HTML)
 ```
 ```
-Eclipse를 이용한 JSP 공부 코드 (JSP)
+Eclipse와 sts3를 이용한 JSP 공부 코드 (JSP)
 ```
 ```
 sts4를 이용한 JAVA 공부 코드 (JAVA)
