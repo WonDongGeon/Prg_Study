@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<!-- 최종적으로 무엇을 할 것인가? Student객체를 이용하여 print를 실행할 것이다. -->
+<!-- 최종적인 것을 실행하기 위해 Student객체 안의 값과 객체를 먼저 생성한 후 주입 -->
+
+<!-- student id -->
+<bean id="id" class="java.lang.Integer">
+<constructor-arg value = "1"></constructor-arg>
+</bean>
+
+<!-- student name -->
+<bean id="name" class="java.lang.String">
+<constructor-arg value = "홍길동"></constructor-arg>
+</bean>
+
+<!-- student Sungjuk -->
+<bean id="sungjuk" class="d0616_03.Sungjuk">
+<constructor-arg value="100"></constructor-arg>
+<constructor-arg value="90"></constructor-arg>
+<constructor-arg value="80"></constructor-arg>
+</bean>
+
+<!-- student Print인터페이스(인터페이스를 사용불가하므로 구현된 객체 선택) -->
+<bean id="info" class="d0616_03.PrintInfo">
+<constructor-arg ref="id"></constructor-arg>
+<constructor-arg ref="name"></constructor-arg>
+<constructor-arg ref="sungjuk"></constructor-arg>
+</bean>
+
+<!-- <bean id="print" class="d0616_03.ConsolePrint">
+<constructor-arg ref="info"/>
+</bean> -->
+
+<bean id="print" class="d0616_03.GridPrint">
+<constructor-arg ref="info"></constructor-arg>
+</bean>
+
+<!-- student 객체를 조립(DI) -->
+<bean id="student" class="d0616_03.Student">
+<constructor-arg ref="id"></constructor-arg>
+<constructor-arg ref="name"></constructor-arg>
+<constructor-arg ref="sungjuk"></constructor-arg>
+<constructor-arg ref="print"></constructor-arg>
+</bean>
+
+</beans>

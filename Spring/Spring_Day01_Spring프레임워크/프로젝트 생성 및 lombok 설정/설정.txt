@@ -1,0 +1,13 @@
+cmd 창 열고
+
+java -jar lombok-1.18.38.jar 입력
+
+lombok 설치 화면이 나오면 사용하려는 sts3, sts4, eclipse를 선택 후 install 후 finish
+
+다시 cmd 창 열고
+
+java -jar lombok.jar 입력
+
+lombok 설치 화면이 나오면 사용하려는 sts3, sts4, eclipse를 다시 선택 후 install 후 finish
+
+이러면 lombok 설정 끝
