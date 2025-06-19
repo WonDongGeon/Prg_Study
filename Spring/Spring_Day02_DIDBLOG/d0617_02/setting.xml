@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<!-- Class.forName, DriverManager class static type error!! -->
+<!-- 
+<bean id="classforname" class="Class.forName">
+<constructor-arg>oracle.jdbc.driver.OracleDriver</constructor-arg>
+</bean>
+
+<bean id="connection" class="java.sql.DriverManager">
+<constructor-arg>jdbc:oracle:thin:@localhost:1521:xe</constructor-arg>
+<constructor-arg>system</constructor-arg>
+<constructor-arg>light</constructor-arg>
+</bean>
+ -->
+ 
+<!-- BasicDataSource object use -->
+<bean id="datasource" class="org.apache.commons.dbcp2.BasicDataSource">
+<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+<property name="username" value="system"/>
+<property name="password" value="light"/>
+</bean>
+ 
+<bean id="dao" class="d0617_02.DAO">
+<constructor-arg ref="datasource"></constructor-arg>
+</bean>
+
+<bean id="service" class="d0617_02.Service">
+<constructor-arg ref="dao"></constructor-arg>
+</bean>
+
+<bean id="controller" class="d0617_02.Controller">
+<constructor-arg ref="service"></constructor-arg>
+</bean>
+</beans>

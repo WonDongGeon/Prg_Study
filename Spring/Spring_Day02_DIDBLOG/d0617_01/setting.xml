@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+<bean id="personInfo" class="d0616_02.PersonInfo">
+<property name="id" value="201231-3052478"/>
+<property name="name" value="hongkildong"/>
+<property name="address" value="서울시 중랑구 면목동"/>
+</bean>
+
+<bean id="gridPrint" class="d0616_02.GridPrint">
+<property name="info" ref="personInfo"/>
+</bean>
+
+<bean id="consolePrint" class="d0616_02.ConsolePrint">
+<property name="info" ref="personInfo"/>
+</bean>
+
+</beans>
