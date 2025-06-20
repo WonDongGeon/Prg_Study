@@ -1,0 +1,51 @@
+## jstl라이브러리 추가
+<dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>jstl</artifactId>
+	    <version>1.2</version>
+</dependency>
+
+##자주사용하는  jstl문법
+<%@ taglib uri="http://java.sun.com/jstl/core" prefix="c" %>
+변수 선언 및 출력
+<c:set></c:set>
+<c:out></c:out>
+
+조건문
+<c:if test="${ }"></c:if> 
+
+반복문
+<c:forEach  items="${ }"></c:forEach>
+
+선택문
+<c:choose>
+<c:when test="${ }"></c:when>
+<c:otherwise></c:otherwise>
+</c:choose>
+
+## 버튼의 이름을 활용한 이벤트 등록
+<script>
+let btns=document.getElementsByTagName("button");
+/* collection은 배열이 아니므로 아래와 같이 수정(오류발생)
+btns.forEach(function(btn){
+	console.log(btn.innerText);	
+});
+*/
+
+Array.from(btns).forEach(function(btn){
+	console.log(btn.innerText);	
+	console.log(btn.textContent);
+	
+	/*
+	switch(btn.textContent){
+	case "전화번호부 입력": location.href="/phonebook/insertform"; break;
+	}
+	*/
+	
+	btn.addEventListener("click",function(e){
+		switch(e.target.textContent){
+		case "전화번호부 입력": location.href="/phonebook/insertform"; break;
+		}
+	});
+});
+</script>
