@@ -17,8 +17,7 @@
     </bean>
     
      
-    <!-- datasource bean 생성 -->
-    <!-- 
+    <!-- datasource bean 생성 --> 
     <bean id="driver" class="oracle.jdbc.driver.OracleDriver"/>
     <bean id="ds" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
     <constructor-arg ref="driver"></constructor-arg>
@@ -26,16 +25,6 @@
     <constructor-arg value="night"></constructor-arg>
     <constructor-arg value="night"></constructor-arg>
     </bean>
-    -->
-
-	<!-- datasource bean 생성 -->
-    <bean id="driver" class="org.h2.Driver"/>
-	<bean id="ds" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-    <constructor-arg ref="driver" />
-    <constructor-arg value="jdbc:h2:tcp://localhost/~/test" />
-    <constructor-arg value="sa" />
-    <constructor-arg value="" />
-	</bean>
     
     <!-- @anotation을 찾기 위한 설정 -->
     <context:component-scan base-package="controller,service,repository"/>
