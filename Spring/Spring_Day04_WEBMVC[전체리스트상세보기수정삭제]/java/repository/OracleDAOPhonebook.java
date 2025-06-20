@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 
 import vo.Phonebook;
 
+@Repository
 public class OracleDAOPhonebook implements PhonebookInter{
 
 	@Autowired
