@@ -1,0 +1,91 @@
+##게시판 만들기
+#테이블 삭제명령
+drop table board;
+
+#테이블 생성명령
+create table board (
+    id NUMBER PRIMARY KEY, -- 글번호 (자동 증가)
+    title VARCHAR2(255) NOT NULL, -- 제목
+    author VARCHAR2(100) NOT NULL, -- 작성자 아이디
+    createdate DATE DEFAULT SYSDATE, -- 작성일자(기본값 : 현재 시간)
+    content CLOB, -- 내용(본문)
+    attachment VARCHAR2(255), -- 첨부 파일(BLOB 데이터 타입 사용)
+    viewcnt NUMBER DEFAULT 0, -- 조회수 (기본값 0)
+    type VARCHAR2(50) NOT NULL -- 게시판 종류 (예 : 공지사항 자유게시판 등)
+);
+
+#글번호 시퀸스 생성
+create sequence board_id_seq increment by 1 start with 1;
+
+#여러개의 글을 입력하기
+BEGIN 
+	FOR i IN  1..111 LOOP 
+		INSERT INTO board (id, title, author, createdate, content, attachment, viewcnt, type)
+		VALUES(board_id_seq.NEXTVAL, 
+		'자유게시판 ' || i || ' 번째 글',
+		'user' || LPAD(i, 2, '0'),
+		SYSDATE,
+		'자유게시판 ' || i || ' 번째 글 내용입니다.',
+		NULL,
+		0,
+		'자유게시판');
+	END LOOP;
+END;
+/
+
+commit;
+
+#URL기능정의 무엇이 필요한가?(파라메다) : 저장되는 객체 : 표현할 페이지
+/board/list?requestPage=x : list()			: 요청페이지(requestPage) : Page객체 : list.jsp
+/board/writeform : writeform() :			: writeform.jsp
+/board/write      : write()       :			: /board/list
+/board/view?id=x : view()	:			: view.jsp
+/board/updateform?id=x: updateform():		: updateform.jsp
+/board/update	: update()	:		: /board/view?id=x
+/board/delete?id=x : delete()		:		: /board/list
+
+#model(페이지를 표현하기 위한 데이터의 모음)
+int totalCount; //글의 전체 갯수 -> 자동 계산
+int pagePerCount=10; //1페이지의 글의 갯수 -> 수동입력
+int totalPage; //전체페이지 -> 자동계산
+int requestPage=1; //요청한페이지 or 현재페이지 -> 수동입력
+
+//요청한 페이지에 대한 시작글번호와 끝글번호가 필요
+//글의 시작번호, 글의 끝번호
+int startnum; //글의 시작번호 -> 자동 계산
+int endnum; //글의 끝번호 -> 자동 계산
+
+//요청한페이지의 네비게이트 시작페이지 번호, 끝페이지 번호
+int startPage; //네비게이트 시작번호 -> 자동 계산
+int endPage; //네비게이트 시작번호 -> 자동 계산
+
+//이전페이지 다음페이지 표시 여부 확인 속성
+boolean isPre;
+boolean isNext;
+
+//요청한 페이지의 게시판 리스트
+List<Writing> list;
+
+select 필드명 from 테이블( or select . . . ) where 조건 order by 필드명 desc(내림), asc(오름)
+select * from board;
+select id from board;
+select rownum, id from board;
+select rownum, rn, id from (select rownum rn, id from board);
+--rn은 직접 사용할 경우 중간에 있는 값을 조건으로 출력할 수 있음
+select rownum, rn, id from (select rownum rn, id from board) where rn>10 and rn<=20;
+--rownum을 직접 사용할 경우 중간에 있는 값을 조건으로 출력할 수 없음(오류)
+select rownum, rn, id from (select rownum rn, id from board) where rownum>10 and rownum<=20;
+select rownum, id from (select rownum rn, id from board where rownum<=20 order by rownum desc) 
+where rownum>10 and rownum<=20;
+--id가 11에서 20까지의 글을 출력하고 싶은 경우 20이하의 글 모두 출력한 후
+--desc를 이용하여 글을 위로 올린 후 상위 10개의 글을 출력하도록 처리
+select rownum rn,id from board where rownum <= 20 order by rownum desc;
+
+select rownum, t1.* from (select * from board order by id ASC) t1;
+
+select * from (select rownum rid, t1.* from (select * from board order by id asc) t1) where rid >= 11 and rid <= 20;
+
+#view 완성
+GPT질의문
+html 부스트랩을 이용하여 태그의 name, value는 id, title, author, createdate, viewcnt에 해당하는 게시판 테이블을 만들고
+페이지 네비게이트를 표시하는 코드 작성
