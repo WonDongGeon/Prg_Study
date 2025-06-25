@@ -1,0 +1,82 @@
+##MVC모델 구현
+#URL기능 정의
+URL                                :Controller                                                    :View
+/board/list?requestPage=x  : list()        : 요청페이지(requestPage)  : Page객체 : list.jsp
+/board/writeform              :writeform() :                                                 : writeform.jsp    
+/board/write                    :write()       :                                                  :/board/list
+/board/view?id=x             :view()        :게시판구별 아이디(id)                       :view.jsp
+/board/updateform?id=x :updateform():업데이픔에 입력할 데이터구별 아이디(id):updateform.jsp
+/board/update                  :update()    :                                                :/board/view?id=x
+/board/delete?id=x            :delete()     :삭제구별 아이디(id)                     :/board/list
+
+#인터페이스 설계
+BoardDao : save(Board board), findAll(), findById(int id), update(Board board), delete(int id); count();
+
+#작업순서
+1)maven web project
+2)pom.xml 라이브러정의
+3)/WEB-INF/web.xml dispathcer-servlet.xml 등록
+4)/WEB-INF/dispatcher-servlet.xml 생성
+5-1)인터페이스 설계를 확인한 후 인터페이스 생성 : BoardDao.java
+5-2)board/BoardController.java, BoardService.java, OracleBoardDao.java, Board.java(vo)
+5-3)OracleBoardDao.java를 BoardDao.java를 implement(구현) / dispathcer-servlet.xml DataSource bean등록
+6)어노테이션을 사용할 경우 객체 스캔, viewResolver등록(dispatcher-servlet.xml)
+7)입력폼에 전달될 한글 깨짐 필터처리등록(web.xml)
+8)기능구현
+
+#작업순서에 대한 설명
+1)maven web project
+2)pom.xml 라이브러정의
+3)/WEB-INF/web.xml dispathcer-servlet.xml 등록
+4)/WEB-INF/dispatcher-servlet.xml 생성
+5-1)인터페이스 설계를 확인한 후 인터페이스 생성 : BoardDao.java
+5-2)board/BoardController.java, BoardService.java, OracleBoardDao.java, Board.java(vo)
+5-3)OracleBoardDao.java를 BoardDao.java를 implement(구현) / dispathcer-servlet.xml DataSource bean등록
+<!-- DAO에서 ds를 사용하므로 필요한 빈 객체 생성 -->
+<bean id="driver" class="oracle.jdbc.driver.OracleDriver"/>
+
+<bean id="ds" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+<constructor-arg ref="driver"/>
+<constructor-arg value="jdbc:oracle:thin:@localhost:1521:xe"/>
+<constructor-arg value="system"/>
+<constructor-arg value="system"/>
+</bean>
+6)어노테이션을 사용할 경우 객체 스캔, viewResolver등록(dispatcher-servlet.xml)
+<context:component-scan base-package="board"/>
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="prefix" value="/WEB-INF/views/"></property>
+<property name="suffix" value=".jsp"></property>
+</bean>
+7)입력폼에 전달될 한글 깨짐 필터처리등록(web.xml)
+<servlet>
+  <servlet-name>dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	<!-- 폼에서 컨트롤러로 파라메다 전송시 한글깨짐 처리 --> 
+  <init-param>
+  	<param-name>encoding</param-name>
+  	<param-value>UTF-8</param-value>
+  </init-param>
+  </servlet>
+
+<!-- 한글처리시 dispatcherServlet에서도 utf-8이 적용되어야 하지만
+  아래 필터도 처리가 되어야함 -->
+<filter>
+    <filter-name>characterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+        <param-name>encoding</param-name>
+        <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+        <param-name>forceEncoding</param-name>
+        <param-value>true</param-value>
+    </init-param>
+</filter>
+
+<filter-mapping>
+    <filter-name>characterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping>
+8)기능구현
+#jstl
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
