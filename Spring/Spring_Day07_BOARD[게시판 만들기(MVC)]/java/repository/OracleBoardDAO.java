@@ -25,7 +25,7 @@ public class OracleBoardDAO implements BoardDAO {
 	@Override
 	public int save(Board board) {
 		String sql="insert into board(id,title,content,author,type,attachment,createdate,viewcnt) "
-				+ "values(board_id_seq,?,?,?,?,?,sysdate,0)";
+				+ "values(board_id_seq.nextval,?,?,?,?,?,sysdate,0)";
 		try {
 		PreparedStatement ps
 		=ds.getConnection().prepareStatement(sql.toString());
