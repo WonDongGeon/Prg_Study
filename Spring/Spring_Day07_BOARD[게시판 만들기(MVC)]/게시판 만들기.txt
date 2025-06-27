@@ -80,3 +80,5 @@ BoardDao : save(Board board), findAll(), findById(int id), update(Board board), 
 8)기능구현
 #jstl
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+update, delete 미구현
