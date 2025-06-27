@@ -1,0 +1,31 @@
+## 파일업로드시 필요한 사항
+(1)라이브러리 등록
+<!-- https://mvnrepository.com/artifact/commons-fileupload/commons-fileupload -->
+	<dependency>
+	    <groupId>commons-fileupload</groupId>
+	    <artifactId>commons-fileupload</artifactId>
+	    <version>1.6.0</version>
+	</dependency>
+	
+	<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+	<dependency>
+	    <groupId>commons-io</groupId>
+	    <artifactId>commons-io</artifactId>
+	    <version>2.19.0</version>
+	</dependency>
+(2)dispatcher-servlet.xml에 빈등록
+<bean id="multipartResolver" 
+class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+<property name="maxUploadSize" value="10485760"></property>
+<property name="maxInMemorySize" value="4096"></property>
+</bean>
+
+(3)전달받은 객체에서 파일에 관련한 속성은 제외
+public class BoardForm {
+	//private String attachment; //file전송관련 name은 폼에서 제외
+}
+(4)컨트롤에 어노테이션 설정
+String write(@ModelAttribute BoardForm form, @RequestParam("attachment") MultipartFile file)
+
+## 파일업로드 처리는 서비스에서 처리
+file.transferTo(new File("D:\\storage\\"+file.getOriginalFilename()));

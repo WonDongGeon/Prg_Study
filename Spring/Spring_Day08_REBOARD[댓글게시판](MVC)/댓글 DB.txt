@@ -1,0 +1,125 @@
+---------------------
+CREATE TABLE reboard (
+    id NUMBER PRIMARY KEY,            -- 글번호 (자동 증가)
+    title VARCHAR2(255) NOT NULL,       -- 제목
+    author VARCHAR2(100) NOT NULL,     -- 작성자 아이디
+    createdate DATE DEFAULT SYSDATE,    -- 작성일자 (기본값: 현재 시간)
+    content CLOB,                       -- 내용 (본문)
+    attachment VARCHAR2(255),          -- 첨부 파일 (BLOB 데이터 타입 사용)
+    viewcnt NUMBER DEFAULT 0,        -- 조회수 (기본값 0)
+    type VARCHAR2(50) NOT NULL,   -- 게시판 종류 (예: 공지사항, 자유게시판 등)
+    isdel number(1) DEFAULT 0 check(isdel between 0 and 1), --글삭제여부 isdel
+    updatedate DATE,	  -- 글 수정일 (수정 시 기록)
+    parentid NUMBER default 0 ,	--글의 부모id(글의 그룹) parentid
+    tab NUMBER default 0 --댓글의 깊이 tab, 부모글에 대해 댓글의 깊이 결정
+);
+
+--시퀸스 생성
+drop sequence reboard_id_seq;
+create sequence reboard_id_seq increment by 1 start with 1;
+
+--입력
+insert into reboard(id,title,author,createdate,content,attachment,viewcnt,type,isdel,updatedate,parentid,tab) 
+values(reboard_id_seq.nextval,'제목입니다.','admin',sysdate,'글의 내용입니다.','a.txt',0,'일반게시판',0,null,0,0);
+
+select * from reboard;
+
+insert into reboard(id,title,author,createdate,content,attachment,type) 
+values(reboard_id_seq.nextval,'제목2입니다.','admin',sysdate,'내용2입니다.','b.txt','일반게시판');
+
+insert into reboard(id,title,author,createdate,content,attachment,type) 
+values(reboard_id_seq.nextval,'제목3입니다.','admin',sysdate,'내용3입니다.','c.txt','일반게시판');
+
+insert into reboard(id,title,author,createdate,content,attachment,type) 
+values(reboard_id_seq.nextval,'제목4입니다.','admin',sysdate,'내용4입니다.','d.txt','일반게시판');
+
+
+insert into reboard(id,title,author,createdate,
+content,type,parentid,tab) 
+values(reboard_id_seq.nextval,'2번댓글 제목입니다.','user',sysdate,
+'2번댓글의 글의 내용입니다.','일반게시판',2,0+1);
+
+select * from reboard order by id desc;
+
+select * from reboard 
+start with parentid=0 connect by prior id=parentid
+order siblings by id desc;
+
+insert into reboard(id,title,author,createdate,
+content,type,parentid,tab) 
+values(reboard_id_seq.nextval,'2-2번댓글 제목입니다.','user',sysdate,
+'2-2번댓글의 글의 내용입니다.','일반게시판',2,0+1);
+
+insert into reboard(id,title,author,createdate,
+content,type,parentid,tab) 
+values(reboard_id_seq.nextval,'2-3번댓글 제목입니다.','user',sysdate,
+'2-3번댓글의 글의 내용입니다.','일반게시판',2,0+1);
+
+insert into reboard(id,title,author,createdate,
+content,type,parentid,tab) 
+values(reboard_id_seq.nextval,'2-4댓글 제목입니다.','user',sysdate,
+'2-4번댓글의 글의 내용입니다.','일반게시판',2,0+1);
+
+delete from reboard where id=121;
+
+insert into reboard(id,title,author,createdate,
+content,type,parentid,tab) 
+values(reboard_id_seq.nextval,'2-3-1번댓글 제목입니다.','user',sysdate,
+'2-3-1번댓글의 글의 내용입니다.','일반게시판',6,2);
+
+begin
+for i in 1..110
+loop
+insert into reboard(id,title,content,attachment,author,createdate,type) 
+values(
+reboard_id_seq.nextval,
+i || '번째 게시글',
+i || '번째 게시글에 대한 내용입니다.',
+null,
+'admin',sysdate,'일반게시판');
+end loop;
+end;
+/
+commit;
+
+-------------------------------
+CREATE TABLE board2(
+id number primary key, 
+title VARCHAR2(30) not null, 
+groupid number not null,  --parentid번호
+seq number not null,
+tab number not null
+);
+insert into board2 values(1,'1번 글 제목',1,0,0);
+insert into board2 values(2,'2번 글 제목',2,0,0);
+insert into board2 values(3,'3번 글 제목',3,0,0);
+insert into board2 values(4,'4번 글 제목',4,0,0);
+
+select * from board2;
+select * from board2 order by id desc;
+select * from board2 order by groupid desc; 
+insert into board2 values(5,'writer2-1',2,1,1);
+select * from board2 order by groupid desc; 
+select * from board2 order by groupid desc, seq asc;
+
+update board2 set seq=seq+1 where groupid=2 and seq>0; 
+insert into board2 values(6,'writer2-2',2,1,1);
+
+update board2 set seq=seq+1 where groupid=2 and seq>0; 
+insert into board2 values(7,'writer2-3',2,1,1);
+
+-- writer2-2에 writer2-2-1 댓글추가
+update board2 set seq=seq+1 where groupid=2 and seq>2; 
+insert into board2 values(8,'writer2-2-1',2,2+1,1+1);
+select * from board2 order by groupid desc, seq asc;
+
+select * from
+ (select rownum rid, t1.* from
+ (select * from reboard start with parentid=0 connect by prior id=parentid order siblings by id desc) t1) 
+where rid>=11 and rid<=20;
+
+select * from
+ (select rownum rid, t1.* from
+ (select * from reboard where isdel<>1 start with parentid=0 connect by prior id=parentid order siblings by id desc) t1
+ ) 
+where rid>=11 and rid<=20;

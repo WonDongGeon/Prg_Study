@@ -1,0 +1,146 @@
+maven web project
+1)pom.xml설정
+플러그인설정, 라이브러리 설정
+반드시 maven project update
+build path java설정
+
+2)WEB-INF폴더 생성
+
+3)WEB-INF/web.xml, dispatcher-servlet.xml 2개 파일 생성
+web.xml : DispatcherServlet.java spring파일 등록, 한글깨짐 필터 설정
+dispatcher-servlet.xml: db에 datasource빈생성, component-scan @Controller, @Service, @Repository를 객체를 빈생성역할
+ViewResolver 빈 객체생성 : jsp파일에서 setViewName함수에 이름만 사용해서 앞뒤에파일을 생성하는 역할 예)setViewName("list") -> /WEB-INF/views/list.jsp 문자열을 생성
+
+4)시스템 개발
+데이터베이스 생성
+데이터베이스 sql문작성(입력, 전체출력, 선택출력, 수정, 삭제)
+해당 데이터베이스 테이블에 대한 인터페이스 작성(설계)
+
+CREATE TABLE reboard (
+    id NUMBER PRIMARY KEY,            -- 글번호 (자동 증가)
+    title VARCHAR2(255) NOT NULL,       -- 제목
+    author VARCHAR2(100) NOT NULL,     -- 작성자 아이디
+    createdate DATE DEFAULT SYSDATE,    -- 작성일자 (기본값: 현재 시간)
+    content CLOB,                       -- 내용 (본문)
+    attachment VARCHAR2(255),          -- 첨부 파일 (BLOB 데이터 타입 사용)
+    viewcnt NUMBER DEFAULT 0,        -- 조회수 (기본값 0)
+    type VARCHAR2(50) NOT NULL,   -- 게시판 종류 (예: 공지사항, 자유게시판 등)
+    isdel number(1) DEFAULT 0 check(isdel between 0 and 1), --글삭제여부 isdel
+    updatedate DATE,	  -- 글 수정일 (수정 시 기록)
+    parentid NUMBER default 0 ,	--글의 부모id(글의 그룹) parentid
+    tab NUMBER default 0 --댓글의 깊이 tab, 부모글에 대해 댓글의 깊이 결정
+);
+
+--시퀸스 생성
+drop sequence reboard_id_seq;
+create sequence reboard_id_seq increment by 1 start with 1;
+
+--입력
+insert into reboard(id,title,author,createdate,content,attachment,viewcnt,type,isdel,updatedate,parentid,tab) values(reboard_id_seq.nextval,'제목입니다.','admin',sysdate,'글의 내용입니다.','a.txt',0,'일반게시판',0,null,0,0);
+
+--전체출력
+--전체출력
+select * from reboard;
+
+-- id와 parentid를 이용한 전체출력
+select * from reboard 
+start with parentid=0 connect by prior id=parentid
+order siblings by id desc;
+
+-- id와 parentid를 이용한 전체출력 중 페이지 출력
+select * from
+ (select rownum rid, t1.* from
+ (select * from reboard start with parentid=0 connect by prior id=parentid order siblings by id desc) t1
+ ) 
+where rid>=11 and rid<=20;
+
+
+--삭제된 글은 제외하고 페이지 출력하기
+select * from
+ (select rownum rid, t1.* from
+ (select * from reboard where isdel=0 start with parentid=0 connect by prior id=parentid order siblings by id desc) t1
+ ) 
+where rid>=11 and rid<=20;
+
+--선택출력
+select * from reboard where id=1;
+
+--수정
+update reboard set title=?, author=?, createdate=?, content=?, attachment=?, viewcnt=?, type=?, isdel=0, updatedate=?, parentid=0, tab=0
+ where id=1;
+
+--삭제
+delete from reboard where id=1;
+
+4-1)ReBoard에 인터페이스 작성(ReBoardDao.java)
+public int save(ReBoard reboard);
+public List<ReBoard> findAll();
+public ReBoard findById(int id); 
+public int update(ReBoard reboard);
+public int delete(int id);
+
+4-2)데이터를 이동할 객체(ReBoard.java)
+데이터베이스 필드명을 활용하여(변수명 동일) 객체 생성
+
+4-3)ReBoardDao인터페이스를 활용하여 OracleReBoardDao.java @Repository객체 생성
+
+5)url기능정하기
+#댓글리스트전체보기
+/reboard/list?requestPage=x  -> list()            ->list.jsp
+#댓글쓰기폼
+/reboard/writeform              -> writeform()   ->writeform.jsp    
+#댓글쓰기처리
+/reboard/write                     -> write()
+#댓글보기(추가적인기능:수정, 삭제, 댓글달기폼, 댓글달기처리)
+/reboard/view?id=x             -> view()          ->view.jsp
+#수정폼
+/board/updateform?id=x      ->updateform() ->updateform.jsp
+#수정처리
+/board/update                   ->update()
+#삭제처리
+/board/delete?id=x             ->delete()
+#댓글쓰기폼열기(get)
+/reboard/reply?id=?   	->reply() -> reply.jsp
+#댓글쓰기처리(post)
+/reboard/reply                 	->reply() 
+
+#댓글쓰기완료 후 list.jsp수정
+
+6)url기능을 처리할 Controller-Service-Dao객체 생성 및 연결
+@Controller, @Service, @Repository, @Componet, @Configuration ...(빈생성하는 어노테이션)
+
+참고사항)
+@Autowired(required = false) : 자동으로 연결되지만 빈객체가 없어도 오류 미발생
+@Repository : 빈의 이름은 자동으로 객체명의 첫글자가 소문자인 이름이 생성
+@Repository("h2dao") : 빈의 이름은 h2dao라는 이름
+@Qualifier("h2dao") : 여러개의 빈이 있을 경우 빈 선택 어노테이션
+
+7)리스트 기능 구현하기
+페이지 전체리스트 URL : /reboard/list?requestPage=1
+
+게시길 입력: /reboard/writeform -> writeform() -> writeform.jsp
+주의사항 : action주소확인, 파일전송시 enctype = "multipart/form-data"
+
+게시글입력처리:/reboard/write
+전달받는 값 : form 데이터를 받아야하며, 한번에 전송하기 위한 객체를 생성
+파일을 저장하는 위한 객체 : MultiPartRequest -> spring에서는 MultipartFile
+
+#상세보기
+
+#삭제처리
+방법1)delete from reboard where id=?
+방법2)update reboard set isdel=1 where id=?
+
+8)임의로 댓글달기
+insert into reboard(id,title,author,createdate,
+content,type,parentid,tab) 
+values(reboard_id_seq.nextval,'RE:[110번 게시글댓글] 제목입니다.','user',sysdate,
+'2번댓글의 글의 내용입니다.','일반게시판',118,0+1);
+
+insert into reboard(id,title,author,createdate,
+content,type,parentid,tab) 
+values(reboard_id_seq.nextval,'RE:[108번 게시글댓글] 제목입니다.','user',sysdate,
+'2번댓글의 글의 내용입니다.','일반게시판',116,0+1);
+
+list.jsp에서 댓글은 tab속성을 이용하여 들여쓰기로 댓글임을 명확히 구분하는 코드 작성
+(ctag 라이브러리)

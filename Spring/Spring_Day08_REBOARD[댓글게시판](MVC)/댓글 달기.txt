@@ -1,0 +1,58 @@
+#댓글쓰기폼열기(get)
+/reboard/reply?id=?  ->reply(int id) -> reply.jsp
+id를 전달하는 이유는 부모의 정보를 얻기 위함
+
+- 컨트롤러에서 필요한 정보를 model에 저장
+model.addAttribute("parentid", parentid);
+model.addAttribute("title",service.getViewPage(parentid).getTitle());
+model.addAttribute("tab",service.getViewPage(parentid).getTab());
+
+- model에 저장된 정보를 tag lib를 이용하여 활용
+<!-- 제목에 부모글의 제목을 활용 -->
+<c:set var="re" value=""/>
+<c:forEach var="i" begin="0" end="${tab}">
+<c:set var="re" value="${re}re:"/>
+</c:forEach>
+<!-- 부모글에 대한 정보가 필요하므로 숨김으로 저장 -->
+<input type="hidden" name="parentid" value="${parentid}">
+
+#댓글쓰기처리(post)
+/reboard/reply                     ->reply() 
+전달 받는 값(VO객체생성): title, content, author,parentid
+데이터베이스 DAO처리:replySave(){
+String sql="insert into reboard(id,title,content,author,attachment,createdate,type,parentid,tab) 
+values(reboard_id_seq.nextval,?,?,?,?,sysdate,'일반게시판',?,?)";
+}
+
+#댓글쓰기완료 후 list.jsp수정
+이미지 처리 :
+단독으로 사용가능, 만약 mvc:resource를 사용할 경우 주석처리
+#web.xml
+<servlet-mapping>
+  <servlet-name>default</servlet-name>
+  <url-pattern>*.css</url-pattern>
+  <url-pattern>*.ico</url-pattern>
+  <url-pattern>*.js</url-pattern>
+  <url-pattern>*.png</url-pattern>
+  <url-pattern>*.gif</url-pattern>
+  <url-pattern>*.jpg</url-pattern>
+  </servlet-mapping>
+
+#dispatcher-servlet.xml :/webapp/static/image/file.png
+<mvc:resources mapping="/**" location="/static/" />
+<mvc:annotation-driven/>
+</beans>
+
+#list.jsp
+<!-- re 이미지 표시 반복 -->
+<c:forEach begin="1" end="${writing.tab}">
+<img src="/image/reply_icon.gif" style="width:42px;height=15px">
+</c:forEach>
+
+${writing.title}
+
+<!-- 파일첨부를 여부를 확인 후 디스크 이미지 표시 -->
+<c:if test="${not empty writing.attachment}">
+<img src="/image/file.png"  style="width:20px;height=20px">
+</c:if>
+</td>
