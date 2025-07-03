@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+<!-- SimpleDatasourceMain.java -->
+<bean id="driver" class="oracle.jdbc.driver.OracleDriver"/>
+
+<bean id="ds" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+<constructor-arg ref="driver"/>
+<constructor-arg value="jdbc:oracle:thin:@localhost:1521:xe"/>
+<constructor-arg value="system"/>
+<constructor-arg value="system"/>
+</bean>
+
+<!-- DriverManagerDatasourceMain.java -->
+<bean id="drivermanagerds" 
+class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"></property>
+<property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"></property>
+<property name="username" value="test"></property>
+<property name="password" value="1111"></property>
+</bean>
+
+<!-- DriverManagerDatasourceMain2.java -->
+<context:property-placeholder location="springdatasource/db.properties"/>
+<bean id="drivermanagerds2" 
+class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+<property name="driverClassName" value="${db.driverClassName}"></property>
+<property name="url" value="${db.url}"></property>
+<property name="username" value="${db.username}"></property>
+<property name="password" value="${db.password}"></property>
+</bean>
+
+</beans>
