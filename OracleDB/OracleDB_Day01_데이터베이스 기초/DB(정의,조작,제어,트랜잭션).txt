@@ -1,0 +1,324 @@
+## sql 기본문
+DDL(정의) : create, drop, alter(구조변경)
+DML(조작) : insert, select, update ,delete
+DCL(제어) : grant(권한을 부여하다), revoke(권한제거)
+DTL(트랜잭션,DCL) : commit, rollback
+
+## system계정 접속되지 않을 시 sysdba계정으로 접속
+sqlplus / as sysdba;
+alter user system identified by system;
+commit;
+connect system/system
+
+## 계정생성
+alter session set "_ORACLE_SCRIPT"=true; --스크립트 허용
+create user user1 identified by 1111; --계정생성
+select user from dual; --계정확인
+grant create session to user1; --접속권한 부여
+grant connect, resource to user1; --테이블 리소스 dml가능
+alter user test default tablespace users quota unlimited on users; --테이블 생성 공간을 크기 부여
+
+## 실습사항
+user2에 대해 계정을 만들고
+alter를 사용하지 않은 상태에서 접속처리
+권한을 부여한 후 접속이 되는지 확인(각 단계별 확인)
+create table member(
+id varchar2(10),
+password varchar2(20)
+);
+
+##계정삭제
+drop user user1 cascade; --반드시 cascade를 적용하여야 연쇄적으로 삭제됨
+
+##sql developer에서 확인
+sqlplus system/system;
+create user test identified by 1111; 
+grant create session to test; 
+grant connect, resource to test; 
+exit; --연결해제
+
+sql developer system으로 접속했을 때와 test계정으로 접속할 때 테이블 구조 차이점 확인
+
+## 자주사용하는 구조테이블
+table, view, index, procedure, function, triger, sequence
+
+##데이터베이스를 왜 사용하는가?네트워크상에서 사용(같이, 서버구성)
+sqlplus test/1111@localhost:1521/xe
+sqlplus test/1111@172.16.15.97:1521/xe
+
+#네트워크 접속관련 설정파일
+C:\oraclexe\app\oracle\product\11.2.0\server\network\ADMIN\listener.ora / tnsnames.ora
+
+##우편번호 DB처리하기
+https://www.epost.go.kr/search/zipcode/areacdAddressDown.jsp
+
+#txt를 다운받은 후 excel에서 외부데이터 불러오기를 통해  구분기호로 나누고 필요한 데이터만 남겨두고 나머지 데이터는 삭제 후 테이블 생성
+drop table postal_address;
+CREATE TABLE postal_address (
+    zipcode           VARCHAR2(6),       -- 우편번호
+    sido              VARCHAR2(30),      -- 시도
+    road_name         VARCHAR2(100),     -- 도로명
+    building_main_no  NUMBER(5),         -- 건물번호본번
+    building_sub_no   NUMBER(5),         -- 건물번호부번 (없을 경우 NULL)
+    dong                VARCHAR2(30),      -- 동 (없을 경우 NULL)
+    jibun_main_no     NUMBER(10)         -- 지번본번
+);
+
+="insert into postal_address values('" & a2 &"','" & b2 &"','"& c2 & "'," &d2 &"," & e2 &",'" & f2 & "'," & g2 &");"
+excel 데이터 테이블을 data.sql로 저장
+data.sql==data.txt파일이 상이(utf8-ansi로 변경)
+
+SQL> edit data.sql
+SQL> @data.sql
+SQL> commit;
+select zipcode, road_name from postal_address where road_name='라온로';
+
+##sqlplus
+drop table info;
+create table info(
+id int,
+name varchar2(20)
+);
+insert into info values(1,'hong1');
+insert into info values(2,'hong2');
+insert into info values(3,'hong3');
+insert into info values(4,'hong4');
+insert into info values(5,'hong5');
+
+테이블 확인: desc info; (sqlplus)
+SELECT column_name, data_type FROM user_tab_columns WHERE table_name = 'INFO';
+select colname, coltype from COL where tname='INFO';
+
+#빈값 확인 ( ' ' , NULL, null,' ')
+update info set name='';
+update info set name=NULL;
+update info set name=null;
+update info set name=' '; --space는 문자열로 취급
+
+select id, nvl(name,'빈값') from info;
+
+#구조변경
+create table student(
+ name varchar2(50), --이름
+ grade number(1),   --학년
+ address varchar2(100)  --주소
+ );
+insert into student values('홍길동','1','서울시');
+insert into student values('홍길동','2','서울시');
+
+Q)현재 테이블에서 id number형으로 primary key로 필드추가하시오.(구조변경)
+테이블 구조변경:alter table , 필드추가 : add
+만들어진 구조에서 필드가 없는상태임
+alter table (테이블명) add (일반적으로 정의할 때 코드)
+alter table student add id number primary key; (중복되지 않는 값을 입력해야 하므로 id가 가진 값이 없으므로 오류 발생)
+alter table student add id number;
+
+#구조변경으로 id제거(drop)
+alter table student drop column id;
+
+ALTER TABLE student ADD id NUMBER DEFAULT 0 NOT NULL;
+update student set id=rownum;
+alter table student add primary key(id); -- primary key(unique + not null)
+or
+alter table student add constraint student_pk primary key(id);
+desc student;
+
+##primary key의 속성을 확인하는 테이블상세보기 명령 확인
+SELECT constraint_name
+FROM user_constraints
+WHERE table_name = 'STUDENT';
+
+##필드의 순서가 마지막에 입력한 필드가 뒤쪽에 위치되므로 앞에 위치하는 방법은?
+#테이블 복사를 이용하여 맨 앞에 필드 추가하기
+테이블 복사 명령 : create table student_new as (select * from student);
+
+drop table student_new;
+
+CREATE TABLE student_new AS
+SELECT CAST(NULL AS number) AS id, T.* FROM student T;
+
+#원래의 테이블의 이름을 사용할 경우
+기존테이블은 삭제하고
+drop table student;
+새로운 테이블을 복사하여 기존테이블 이름으로 변경
+create table student as select * from student_new;
+새로운 테이블은 삭제
+ drop table student_new;
+
+##선생님에 대한 테이블생성
+create table teacher(
+ id number(3) primary key,
+ name varchar2(50), --이름
+ hp varchar2(50), --전화번호
+ address varchar2(100)  --주소
+ );
+insert into teacher values(101,'김선생','010-1111-1111','중랑구');
+insert into teacher values(102,'이선생','010-1111-2222','중랑구');
+
+#학생과 선생님 테이블간에는 관련성이 존재하지 않음
+명제 변경:학생은 1명의 담임을 가진다.(선생님은 여러명의 학생을 가진다.)
+관계:선생님테이블, 학생테이블
+학생테이블에 선생님 필드를 추가할지?(0)
+선생님테이블에 학생을 추가할지? 선생님 테이블은 중복이 발생하지 않게 처리
+
+선생님은 1 , 학생은 N의 관계일 때(1:N)
+선생님은 별도의 외부필드를 참조하지 않고
+학생은 외부필드를 참조하는 형식으로 필드를 생성한다.
+
+Q.학생테이블에 선생님 필드(teacher_id)를 추가하시오.
+alter table student add teacher_id number;
+
+Q.선생님 필드(teacher_id)는 teacher 테이블을 참조하므로 외래키(참조:references) 추가하시오.
+alter table student add foreign key(teacher_id) references teacher(id); --teacher라는 테이블의 id를 참조
+
+#조인방법
+select student.*, teacher.* 
+from student, teacher 
+where student.teacher_id=teacher.id;
+
+select * from student, teacher 
+where student.teacher_id=teacher.id;
+
+select * from student s, teacher t 
+where s.teacher_id=t.id;
+
+select s.id, s.name,t.name from student s, teacher t 
+where s.teacher_id=t.id;
+
+#학생테이블을 기준으로 선생님 테이블이 뒤에 달라붙는 구조
+select * from student s inner join teacher t 
+on s.teacher_id=t.id;
+
+select * from student, teacher;
+
+##생각해보기)학생테이블과, 선생님 테이블에서 어떤 테이블이 반드시 필요한가?
+학생은 선생님이 반드시 필요한가?반드시 필요(선생님 아이디를 참조:외래키필요)
+선생님은 학생이 반드시 필요한가?반드시 필요하지 않음
+select * from postal_address where road_name='라온로';
+
+예제)회원테이블(아이디/번호, 비밀번호, 이름, 주소, 전화번호, 이메일주소)
+상품테이블(상품번호/번호, 물품명, 가격, 재고수량)
+두 테이블의 관계를 정의하고(회원을 물품을 반드시 구매한다.)
+테이블을 생성하시오.
+
+회원테이블-구매테이블-상품테이블
+
+구매테이블에 필요한 정보(회원아이디, 물품아이디, 주문시간, 수량)
+어떠한 회원이 어떠한 물품을 구매했고, 이때 구매한 시간, 구매한 수량
+
+#회원테이블
+drop table member;
+CREATE TABLE MEMBER (
+    ID      VARCHAR2(20) PRIMARY KEY,       -- 아이디 (회원번호 겸용)
+    PASSWORD       VARCHAR2(100) NOT NULL,         -- 비밀번호 (해싱 고려 가능)
+    NAME           VARCHAR2(50) NOT NULL,          -- 이름
+    ADDRESS        VARCHAR2(200),                  -- 주소
+    HP   VARCHAR2(20),                   -- 전화번호
+    EMAIL          VARCHAR2(100)                   -- 이메일주소
+);
+
+#상품테이블
+drop table product;
+CREATE TABLE PRODUCT (
+    ID     VARCHAR2(20) PRIMARY KEY,      -- 상품번호 (고유값)
+    NAME   VARCHAR2(100) NOT NULL,        -- 물품명
+    PRICE          NUMBER(10, 2) NOT NULL,        -- 가격 (소수점 2자리까지 허용)
+    STOCK_QUANTITY NUMBER(10) DEFAULT 0           -- 재고수량 (기본값 0)
+);
+#구매테이블
+drop table purchase;
+CREATE TABLE PURCHASE (
+    ID    NUMBER  PRIMARY KEY, -- 구매 ID (자동 증가)
+    MEMBER_ID      VARCHAR2(20) NOT NULL,            -- 회원아이디
+    PRODUCT_ID     VARCHAR2(20) NOT NULL,            -- 물품아이디
+    ORDER_TIME     TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- 주문시간 (기본값: 현재 시간)
+    QUANTITY       NUMBER(10) NOT NULL,              -- 수량
+    FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER (ID), -- 외래키: 회원아이디
+    FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCT (ID) -- 외래키: 물품아이디
+);
+
+INSERT INTO MEMBER (ID, PASSWORD, NAME, ADDRESS, HP, EMAIL) VALUES
+('M001', 'password123', '김철수', '서울특별시 강남구 역삼동', '010-1234-5678', 'kimcs@example.com');
+INSERT INTO MEMBER (ID, PASSWORD, NAME, ADDRESS, HP, EMAIL) VALUES
+('M002', 'securepassword456', '이영희', '서울특별시 송파구 방이동', '010-2345-6789', 'leeyh@example.com');
+INSERT INTO MEMBER (ID, PASSWORD, NAME, ADDRESS, HP, EMAIL) VALUES
+('M003', 'mypassword789', '박민수', '부산광역시 해운대구', '010-3456-7890', 'parkms@example.com');
+
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK_QUANTITY) VALUES
+('P001', '아이폰 14', 1200000.00, 50);
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK_QUANTITY) VALUES
+('P002', '삼성 갤럭시 S23', 1050000.00, 30);
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK_QUANTITY) VALUES
+('P003', 'LG 65인치 UHD TV', 1500000.00, 20);
+INSERT INTO PRODUCT (ID, NAME, PRICE, STOCK_QUANTITY) VALUES
+('P004', '에어팟 프로', 250000.00, 100);
+
+INSERT INTO PURCHASE (MEMBER_ID, PRODUCT_ID,QUANTITY) VALUES
+('M001', 'P001', 1),
+('M001', 'P004', 2),
+('M002', 'P003', 1),
+('M003', 'P002', 1),
+('M003', 'P004', 3);
+
+Q.위의 코드에서 필요한 사항은?
+구매에서 구매한 시간을 자동으로 입력
+INSERT INTO PURCHASE (MEMBER_ID, PRODUCT_ID, ORDER_TIME, QUANTITY) VALUES (x,x,sysdate,x);
+테이블이 추가될 때 중복되지 않고, 비어 있지 않은 아이디가 필요할 때 특정한 값이 아니라면 시퀸스 추가
+create sequence purchase_id_seq;
+INSERT INTO PURCHASE (ID, MEMBER_ID, PRODUCT_ID, ORDER_TIME, QUANTITY) VALUES (purchase_id_seq.nextval,x,sysdate,x);
+
+#최종수행코드
+create sequence purchase_id_seq;
+INSERT INTO PURCHASE (id, MEMBER_ID, PRODUCT_ID,order_time,QUANTITY) VALUES
+(purchase_id_seq.nextval,'M001', 'P001',sysdate, 1);
+INSERT INTO PURCHASE (id, MEMBER_ID, PRODUCT_ID,order_time,QUANTITY) VALUES
+(purchase_id_seq.nextval,'M001', 'P004',sysdate, 2);
+INSERT INTO PURCHASE (id, MEMBER_ID, PRODUCT_ID,order_time,QUANTITY) VALUES
+(purchase_id_seq.nextval,'M002', 'P003',sysdate, 1);
+INSERT INTO PURCHASE (id, MEMBER_ID, PRODUCT_ID,order_time,QUANTITY) VALUES
+(purchase_id_seq.nextval,'M003', 'P002',sysdate, 1);
+INSERT INTO PURCHASE (id, MEMBER_ID, PRODUCT_ID,order_time,QUANTITY) VALUES
+(purchase_id_seq.nextval,'M003', 'P004',sysdate, 3);
+
+##추가예제)로그인(member)을 했다고 가정하에, 방명록에 필요한 테이블의 구성하고 데이터를 입력한 후 특정한 글에 대한 댓글을 모두 나열하시오.
+
+CREATE TABLE GUESTBOOK (
+ID      NUMBER PRIMARY KEY,        -- 방명록 고유번호 (자동 증가 권장)
+MEMBER_ID     VARCHAR2(20) NOT NULL,     -- 작성자 ID (MEMBER 테이블 참조)
+CONTENT       VARCHAR2(1000) NOT NULL,   -- 방명록 내용
+REG_DATE      DATE DEFAULT SYSDATE,      -- 작성일자
+
+CONSTRAINT FK_GUESTBOOK_MEMBER  FOREIGN KEY (MEMBER_ID) REFERENCES MEMBER(ID)
+);
+
+-- 시퀀스 생성 (Oracle 기준)
+CREATE SEQUENCE GUESTBOOK_SEQ START WITH 1 INCREMENT BY 1;
+
+-- 방명록 데이터 입력 (예시 MEMBER ID: user01 ~ user05 존재한다고 가정)
+INSERT INTO GUESTBOOK (ID, MEMBER_ID, CONTENT, REG_DATE) VALUES (GUESTBOOK_SEQ.NEXTVAL, 'M001', '안녕하세요! 첫 방문입니다.', SYSDATE);
+INSERT INTO GUESTBOOK (ID, MEMBER_ID, CONTENT, REG_DATE) VALUES (GUESTBOOK_SEQ.NEXTVAL, 'M001', '좋은 하루 보내세요.', SYSDATE);
+INSERT INTO GUESTBOOK (ID, MEMBER_ID, CONTENT, REG_DATE) VALUES (GUESTBOOK_SEQ.NEXTVAL, 'M002', '사이트가 멋지네요.', SYSDATE);
+INSERT INTO GUESTBOOK (ID, MEMBER_ID, CONTENT, REG_DATE) VALUES (GUESTBOOK_SEQ.NEXTVAL, 'M002', '오늘 날씨가 참 좋아요.', SYSDATE);
+INSERT INTO GUESTBOOK (ID, MEMBER_ID, CONTENT, REG_DATE) VALUES (GUESTBOOK_SEQ.NEXTVAL, 'M001', '개발자님 응원합니다!', SYSDATE);
+
+-- 추가로 반복 입력
+BEGIN
+    FOR i IN 6..20 LOOP
+        INSERT INTO GUESTBOOK (ID, MEMBER_ID, CONTENT, REG_DATE)
+        VALUES (GUESTBOOK_SEQ.NEXTVAL, 
+                CASE MOD(i, 3) 
+                    WHEN 0 THEN 'M001'
+                    WHEN 1 THEN 'M002'
+                    ELSE 'M003'
+                END,
+                '테스트 메시지 ' || i,
+                SYSDATE - MOD(i, 3));
+    END LOOP;
+END;
+/
+
+SELECT g.ID, m.id, g.MEMBER_ID, m.name, g.CONTENT, TO_CHAR(g.REG_DATE, 'YYYY-MM-DD HH24:MI:SS') AS REG_DATE
+FROM GUESTBOOK g
+inner join MEMBER m 
+on m.id = g.member_id
+ORDER BY g.REG_DATE DESC;

@@ -1,0 +1,126 @@
+예제)학생(Student), 과목(Course), 수강신청(Enrollment) 테이블의 관계
+학생은 과목을 수강신청한다.
+-- 학생 테이블 생성
+drop table student;
+CREATE TABLE Student (
+    id INT PRIMARY KEY,        -- 학생 ID
+    name VARCHAR2(100) NOT NULL -- 학생 이름
+);
+
+-- 과목 테이블 생성
+drop table course;
+CREATE TABLE Course (
+    id INT PRIMARY KEY,         -- 과목 ID
+    name VARCHAR2(100) NOT NULL -- 과목 이름
+);
+
+-- 수강신청 테이블 생성
+drop table Enrollment;
+CREATE TABLE Enrollment (
+    student_id INT,                    -- 학생 ID
+    course_id INT,                     -- 과목 ID
+    coursedate DATE,              -- 수강 신청 날짜
+    PRIMARY KEY (student_id, course_id), -- 학생과 과목의 조합이 유니크하도록 설정
+    FOREIGN KEY (student_id) REFERENCES Student(id) on delete cascade,
+    FOREIGN KEY (course_id) REFERENCES Course(id) on delete cascade
+);
+
+-- 학생 데이터 입력
+INSERT INTO Student (id, name) VALUES (1, '김철수');
+INSERT INTO Student (id, name) VALUES (2, '이영희');
+INSERT INTO Student (id, name) VALUES (3, '박민수');
+INSERT INTO Student (id, name) VALUES (4, '최지혜');
+INSERT INTO Student (id, name) VALUES (5, '홍길동');
+INSERT INTO Student (id, name) VALUES (6, '강나래');
+INSERT INTO Student (id, name) VALUES (7, '조성호');
+INSERT INTO Student (id, name) VALUES (8, '이준호');
+INSERT INTO Student (id, name) VALUES (9, '배은지');
+INSERT INTO Student (id, name) VALUES (10, '송현우');
+
+-- 과목 데이터 입력
+INSERT INTO Course (id, name) VALUES (1, '알고리즘');
+INSERT INTO Course (id, name) VALUES (2, '데이터베이스');
+INSERT INTO Course (id, name) VALUES (3, '소프트웨어 공학');
+INSERT INTO Course (id, name) VALUES (4, '운영체제');
+INSERT INTO Course (id, name) VALUES (5, '네트워크');
+
+-- 수강 신청 데이터 입력
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (1, 1, TO_DATE('2025-07-01', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (2, 2, TO_DATE('2025-07-01', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (3, 3, TO_DATE('2025-07-02', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (4, 4, TO_DATE('2025-07-02', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (5, 5, TO_DATE('2025-07-03', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (6, 1, TO_DATE('2025-07-03', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (7, 2, TO_DATE('2025-07-04', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (8, 3, TO_DATE('2025-07-04', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (9, 4, TO_DATE('2025-07-05', 'YYYY-MM-DD'));
+INSERT INTO Enrollment (student_id, course_id, coursedate) VALUES (10, 5, TO_DATE('2025-07-05', 'YYYY-MM-DD'));
+
+##테이블 삭제
+테이블 생성 :  학생 -> 코스 -> 수강
+삭제순서 : 생성순서대로 동일하게 삭제(drop table student;drop table course;drop table Enrollment;)
+테이블 삭제시 : 역순으로 삭제
+#Q)역순으로 삭제하지 않고 삭제하는 방법을 찾으시오.
+1) drop table student cascade constraints; --연쇄적인(cascade)명령을 이용하여 처리
+2)테이블 설정 시 cascade를 적용하는 방법
+alter table enrollment
+add foreign key(student_id) references student(id) on delete cascade;
+
+## 참고사항 : 제약사항 삭제명령 : alter table enrollment drop constaint fk_course;
+alter table enrollment
+add foreign key(course_id) references course(id) on delete cascade;
+
+select * from student;
+select * from course;
+select * from enrollment;
+
+##변수설정하기
+SQL> SET SERVEROUTPUT ON; --dbms_output_put_line함수가 실행되도록 설정
+SQL> DECLARE
+    str_test VARCHAR2(50); -- 변수 선언
+    begin
+    str_test:='oracle db'; -- :=는 값을 입력하는 명령
+    dbms_output.put_line(str_test);
+    end;
+/
+--sqlplus에서 실행시 반드시 /를 포함해야함
+
+##제어문
+--학생테이블에 12부터 100번까지 데이터를 반복문으로 처리하시오.
+DECLARE
+i number(2):=12; --변수 초기화
+begin
+    loop
+    insert into student values(i,'홍길동' || i);
+    i:=i+1;
+    exit when i>30;
+    end loop;
+end;
+/
+select * from student;
+
+--while
+DECLARE 
+i number(2):=1;
+begin 
+    while(i<11)
+    loop
+    dbms_output.put_line(i);
+    i:=i+1;
+    end loop;
+end;
+/
+--for (for문은 declare없이 for구문에서 변수가 선언가능)
+--DECLARE 
+--i number(2):=1;
+begin 
+    for i in 1..10
+    loop
+    dbms_output.put_line(i);
+    end loop;
+end;
+
+##뷰권한생성을 가지는 명령(system에서 권한 처리)
+GRANT CREATE VIEW TO 사용자_이름;
+
+##view, index, procedure(리턴없을/단순처리)
