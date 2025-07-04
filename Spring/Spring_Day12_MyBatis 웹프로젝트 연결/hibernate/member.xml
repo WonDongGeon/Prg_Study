@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+<!-- class는 테이블에 해당한다.(name은 자바객체, table은 db테이블명) id or property : 속성(필드), column : 테이블의 필드 -->
+<!-- primary key에 해당하는 필드는 id태그를 이용 -->
+
+<class name="hibernate.MemberEntity" table ="MemberEntity">
+<id name="id" type="java.lang.String">
+<column name="ID"></column>
+</id>
+
+<property name="password" type="java.lang.String">
+<column name="PASSWORD"></column>
+</property>
+
+</class>
+</hibernate-mapping>

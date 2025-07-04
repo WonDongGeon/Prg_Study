@@ -1,0 +1,22 @@
+##프로젝트에 따라 설정이 달라짐
+#main함수에서는 setting.xml에 bean생성
+#webproject에서 dispatcher-servlet.xml bean생성하는 파일이므로 bean생성관련 내용은 해당파일에 적용
+
+#db.properties파일의 위치
+dispatcher-servlet.xml ->
+<context:property-placeholder location="classpath:mybatisv2/db.properties"/>
+위의 코드를 web에 적용하기 위해서는 
+classpath에 대한 이해 : classpath에 등록을 하면 path등록과 유사
+src/java폴더, src/resources폴더가 classpath에 등록되어 있으므로 이 폴더를 기준으로 한다.
+src/resources/db.properties 파일이 존재하면 
+<context:property-placeholder location="classpath:db.properties"/>
+src/resources/mybatis/db.properties
+<context:property-placeholder location="classpath:mybatis/db.properties"/>
+
+##설정파일은 resources에 위치하게 되는데 MemberMapper.xml파일 위치를 resources에 두면 문제가 발생
+현재는 MemberMapper.java, MemberMapper.xml이 동일한 위치에 위치
+컴파일을 실행하면 문제가 발생.
+
+##특수문자처리
+<![CDATA[[]]>
+특수문자를 사용안할 경우 >기호는 &gt;  <기호는 &lt사용
