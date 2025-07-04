@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+<session-factory>
+<!-- Database connection settings -->
+<property name="hibernate.connection.driver_class">oracle.jdbc.driver.OracleDriver</property>
+<property name="hibernate.connection.url">jdbc:oracle:thin:@localhost:1521:xe</property>
+<property name="hibernate.connection.username">test</property>
+<property name="hibernate.connection.password">1111</property>
+<!-- Hibernate dialect -->
+<property name="hibernate.dialect">org.hibernate.dialect.OracleDialect</property>
+<!-- Show SQL queries -->
+<property name="show_sql">true</property>
+<!-- Auto-create/update schema -->
+<property name="hbm2ddl.auto">update</property>
+
+<!-- Mapping files (db테이블을 연결하는 설정파일) -->
+<mapping resource="school/Student.hbm.xml" />
+</session-factory>
+</hibernate-configuration>
