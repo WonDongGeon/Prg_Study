@@ -1,0 +1,105 @@
+scr/main/java/자신이 구현할 폴더를 생성(package)
+로그인 : src/main/java/login
+게시판 : src/main/java/board
+회원가입 : src/main/java/member
+
+WEB-INF/views/각각의 폴더를 생성(구분을 위한 jsp폴더)
+WEB-INF/views/login
+WEB-INF/views/board
+WEB-INF/views/member
+
+#각 폴더에서 controller service repository
+객체가 존재
+src/main/java/login/LoginController.java
+src/main/java/login/LoginService.java
+src/main/java/login/LoginRepository.java
+
+Controller만 만들면
+src/main/java/login/LoginController.java
+src/main/java/board/BoardController.java
+src/main/java/controller/MemberController.java
+
+url맵핑은 구분하기 위해서
+기본 로그인 url:/login
+로그인 폼 :/login/loginform
+
+실습사항
+/login/index
+/board/index
+/member/index
+
+views/login/index.jsp
+views/board/index.jsp
+views/member/index.jsp
+
+member/MemberController.java
+@Controller
+@RequestMapping("/member")
+public class MemberController {
+
+	@RequestMapping("index")
+	public String index() {
+		return "member/index"; //기본경로에 return 문자열이 합쳐서 jsp호출
+	}
+}
+
+##각각의 컨트롤러를 생성하여 uri가 동작되는지 확인(개별동작 확인)
+http://localhost:8888/login/index
+http://localhost:8888/board/index
+http://localhost:8888/member/index
+
+##header.jsp, footer.jsp를 이용하여 페이지의 위아래 부분을 추가하는 코드 재작성
+views/header.jsp
+views/footer.jsp
+views/index.jsp
+
+#index.jsp (page attribute만 변경, 모든 url은 index.jsp 페이지를 실행하게 됨)
+<jsp:include page="/WEB-INF/views/header.jsp"/>
+<!-- 열고 닫는 태그가 있을 경우 오류발생 -->
+<%-- <jsp:include page="/WEB-INF/views/header.jsp"></jsp:include> --%>
+<jsp:include page="/WEB-INF/views/${page}.jsp"/>
+<jsp:include page="/WEB-INF/views/footer.jsp"/>
+
+##컨트롤러를 다음과 같이 수정
+@RequestMapping("index") 
+	public String index(Model model) {
+		model.addAttribute("page", "board/" + "index"); // views/board/index.jsp -> board/index만을 attribute해서 생성
+		return "index"; //무조건 views/index.jsp
+	}
+	
+@RequestMapping("index") 
+	public String index(Model model) {
+		model.addAttribute("page", "login/" + "index");
+		return "index"; //무조건 views/index.jsp
+	}
+
+@RequestMapping("index") 
+	public String index(Model model) {
+		model.addAttribute("page", "member/" + "index");
+		return "index"; //무조건 views/index.jsp
+	}
+
+##각각의 컨트롤러를 생성하여 uri가 동작되는지 확인(개별동작 확인)
+http://localhost:8888/login/index
+http://localhost:8888/board/index
+http://localhost:8888/member/index
+
+##header에 각각의 기능을 메뉴로 만들기
+header.jsp수정
+<div>
+<ul>
+<li><a href="/login/index">로그인</a></li>
+<li><a href="/board/index">게시판</a></li>
+<li><a href="/member/index">회원가입</a></li>
+</ul>
+</div>
+
+##git에서 팀원들간에 나누어 작업을 할 때 공통작업사항, 개별사항을 확인
+#공통작업
+1)layout프로젝트 생성
+2)pom.xml, dsipatcher-servlet.xml, web.xml
+3)페이지 공통작업 : views/footer.jsp, header.jsp, index.jsp
+공통작업에 관한 프로젝트를 github에 업로드 시킨 후 각각의 개별 작업으로 복사
+#개별작업
+src/main/java/각각의 폴더를 생성하여 controller, service, dao작성
+src/main/webapp/WEB-INF/views/각각의 폴더를 생성하여 jsp작업
