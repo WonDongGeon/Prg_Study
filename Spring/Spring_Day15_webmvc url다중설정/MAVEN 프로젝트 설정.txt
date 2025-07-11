@@ -1,0 +1,260 @@
+
+
+#설정
+pom.xml
+1) 설정 이해
+<package>war</package>
+
+<build>
+<plugins>
+<plugin>
+<artifactId>maven-war-plugin</artifactId>
+<version>3.2.3</version>
+</plugin>
+</plugins>
+</build>
+
+<properties>
+<maven.compiler.source>1.8</maven.compiler.source>
+<maven.compiler.target>1.8</maven.compiler.target>
+</properties>
+
+2) 라이브러리에 대한 이해(기본 서블릿, spring log, el tag, lombok, db)
+<!-- 기본 라이브 러리 -->
+<dependency>
+<groupId>org.apache.tomcat</groupId>
+<artifactId>tomcat-jsp-api</artifactId>
+<version>9.0.71</version>
+</dependency>
+
+<dependency>
+<groupId>org.springframework</groupId>
+<artifactId>spring-webmvc</artifactId>
+<version>5.3.39</version>
+</dependency>
+
+<!-- 로그파일 -->
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>1.7.25</version>
+</dependency>
+
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.2.3</version>
+</dependency>
+
+<!-- el tag 명령 -->
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>jstl</artifactId>
+    <version>1.2</version>
+</dependency>
+
+<!-- get, set지원 -->
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.18.38</version>
+</dependency>
+
+<!-- db관련 라이브러리 -->
+<!-- 드라이버 라이브러리(oracle/mysql/mssql/h2/postgre/mariadb/mongodb) -->
+
+<dependency>
+    <groupId>com.oracle.database.jdbc</groupId>
+    <artifactId>ojdbc11</artifactId>
+    <version>23.8.0.25.04</version>
+</dependency>
+
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-jdbc</artifactId>
+    <version>5.3.39</version>
+</dependency>
+
+<!-- datasource 관련 라이브러리 -->
+
+<!-- hibernate 라이브러리 -->
+
+#web.xml
+
+##WEB MVC 기본 작업순서 및 이해
+1)maven web project
+2)pom.xml 플러그인 설정 / 라이브러리 정의
+3)/WEB-INF/web.xml생성
+3-1)DispatcherServlet.java 서블릿 등록
+3-2)입력폼에 전달될 한글 깨짐 필터처리 등록
+4)/WEB-INF/dispatcher-servlet.xml 생성(web.xml에서 등록되면 해당설정파일이 실행)
+4-1)어노테이션을 사용할 경우 객체 스캔 : 
+<context:component-scan base-package="manager,user"/>
+
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="prefix" value="/WEB-INF/views/"></property>
+<property name="suffix" value=".jsp"></property>
+</bean>
+
+<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+<property name="maxUploadSize" value="10485760"></property>
+<property name="maxInMemorySize" value="4096"></property>
+</bean>
+
+#데이터베이스 관련 빈 생성
+<bean id="driver" class="oracle.jdbc.driver.OracleDriver"/>
+
+ <bean id="driver" class="oracle.jdbc.driver.OracleDriver"/>
+    <bean id="ds" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+    <constructor-arg ref="driver"></constructor-arg>
+    <constructor-arg value="jdbc:oracle:thin:@localhost:1521:xe"></constructor-arg>
+    <constructor-arg value="night"></constructor-arg>
+    <constructor-arg value="night"></constructor-arg>
+    </bean>
+
+<!-- mybatis 설정 -->
+<context:property-placeholder location="classpath:db.properties"/>
+<!-- hikari datasource는 설정파일과 데이터소스가 분리되어 있다. -->
+<bean id="hikariconfig" class="com.zaxxer.hikari.HikariConfig">
+<property name="driverClassName" value="${db.driverClassName}"></property>
+<property name="jdbcUrl" value="${db.url}"></property>
+<property name="username" value="${db.username}"></property>
+<property name="password" value="${db.password}"></property>
+</bean>
+
+<!-- 최종 사용
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DispatcherServlet.java는 web.xml등록(dispatcher-servlet.xml)
+
+Q. dispatcher-servlet.xml파일을 사용하지 않고 등록하는 방법은?
+web.xml에서 DispatcherServlet등록부분(<Servlet>)에서 설정파일을 변경
+
+<servlet>
+  <servlet-name>dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	<!-- 폼에서 컨트롤러로 파라메다 전송시 한글깨짐 처리 --> 
+  <init-param>
+  	<param-name>encoding</param-name>
+  	<param-value>UTF-8</param-value>
+  </init-param>
+  
+  <init-param>
+  <param-name>contextConfigLocation</param-name>
+  <param-value>
+  /WEB-INF/config/member-servlet.xml
+  /WEB-INF/config/board-servlet.xml
+  /WEB-INF/config/login-servlet.xml
+  </param-value>
+  </init-param>
+  </servlet>
+
+src/java/member,login,board 패키지 생성 후
+MemberController, LoginController, BoardController를 작성 후 어노테이션 적용
+"-servlet.xml 파일에
+<context:component-scan base-package="board"/>
+<context:component-scan base-package="login"/>
+<context:component-scan base-package="member"/>
+를 스캔하여 각 파일의 빈이 생성되는 확인
+
+Q) 위의 각각에 파일에 뷰 리절버를 등록해서 index.jsp를 실행
+*-servlet.xml 파일에
+
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="prefix" value="/WEB-INF/views/member/"></property>
+<property name="suffix" value=".jsp"></property>
+</bean>
+
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="prefix" value="/WEB-INF/views/login/"></property>
+<property name="suffix" value=".jsp"></property>
+</bean>
+
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="prefix" value="/WEB-INF/views/board/"></property>
+<property name="suffix" value=".jsp"></property>
+</bean>
+
+컨트롤에 /member/index, /login/index, /board/index를 uri에 등록하고
+views/member/index.jsp
+views/member/index.jsp
+views/member/index.jsp
+
+문제점 : 처음등록된 xml파일에 대해 view Resolver가 적용되는 문제가 발생
+해결방법 : namespace(beans 네임스페이스)를 이용하여 처리
+전역변수로 설정, 리스너 등록, 각각의 서블릿 등록 및 맵핑
+#web.xml
+<!-- 리스너를 이용하여 전역변수를 이용, 설정파일을 통해 빈로드 -->
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>/WEB-INF/root-context.xml</param-value>
+  </context-param>
+  
+  <!-- spring.web라이브러리 -->
+  <listener>
+  	<listener-class>
+  	org.springframework.web.context.ContextLoaderListener
+  	</listener-class>
+  </listener>
+  
+  <!-- member, login, board url을 DispatcherServlet객체가 별도관리 -->
+  <!-- 별도관리의 의미는 url을 각각 관리하겠다는 의미 -->
+  <!-- member url관리 -->
+  <servlet>
+  <servlet-name>member-dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  <init-param>
+   <param-name>contextConfigLocation</param-name>
+   <param-value>/WEB-INF/config/member-context.xml</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  <servlet-name>member-dispatcher</servlet-name>
+  <url-pattern>/member/*</url-pattern>
+  </servlet-mapping>
+    
+  <!-- login url관리 -->
+  <servlet>
+  <servlet-name>login-dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  <init-param>
+   <param-name>contextConfigLocation</param-name>
+   <param-value>/WEB-INF/config/login-context.xml</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  <servlet-name>login-dispatcher</servlet-name>
+  <url-pattern>/login/*</url-pattern>
+  </servlet-mapping>
+  
+   <!-- board url관리 -->
+  <servlet>
+  <servlet-name>board-dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  <init-param>
+   <param-name>contextConfigLocation</param-name>
+   <param-value>/WEB-INF/config/board-context.xml</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  <servlet-name>board-dispatcher</servlet-name>
+  <url-pattern>/board/*</url-pattern>
+  </servlet-mapping>

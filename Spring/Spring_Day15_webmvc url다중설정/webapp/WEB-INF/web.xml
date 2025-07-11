@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
+
+<!-- 리스너를 이용하여 전역변수를 이용, 설정파일을 통해 빈로드 -->
+  <context-param>
+  	<param-name>contextConfigLocation</param-name>
+  	<param-value>/WEB-INF/root-context.xml</param-value>
+  </context-param>
+  
+  <!-- spring.web라이브러리 -->
+  <listener>
+  	<listener-class>
+  	org.springframework.web.context.ContextLoaderListener
+  	</listener-class>
+  </listener>
+  
+
+<servlet>
+  <servlet-name>member-dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  <init-param>
+   <param-name>contextConfigLocation</param-name>
+   <param-value>/WEB-INF/config/member-servlet.xml</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  <servlet-name>member-dispatcher</servlet-name>
+  <url-pattern>/member/*</url-pattern>
+  </servlet-mapping>
+    
+  <!-- login url관리 -->
+  <servlet>
+  <servlet-name>login-dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  <init-param>
+   <param-name>contextConfigLocation</param-name>
+   <param-value>/WEB-INF/config/login-servlet.xml</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  <servlet-name>login-dispatcher</servlet-name>
+  <url-pattern>/login/*</url-pattern>
+  </servlet-mapping>
+  
+   <!-- board url관리 -->
+  <servlet>
+  <servlet-name>board-dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+  <init-param>
+   <param-name>contextConfigLocation</param-name>
+   <param-value>/WEB-INF/config/board-servlet.xml</param-value>
+  </init-param>
+  <load-on-startup>1</load-on-startup>
+  </servlet>
+  
+  <servlet-mapping>
+  <servlet-name>board-dispatcher</servlet-name>
+  <url-pattern>/board/*</url-pattern>
+  </servlet-mapping>
+
+<!-- DispatcherServlet.java가 실행되면 기본적으로 dispathcer-serlvet.xml파일이 같이 로드 -->
+<!-- <servlet>
+  <servlet-name>dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+	폼에서 컨트롤러로 파라메다 전송시 한글깨짐 처리 
+  <init-param>
+  	<param-name>encoding</param-name>
+  	<param-value>UTF-8</param-value>
+  </init-param>
+  
+ <init-param>
+  <param-name>contextConfigLocation</param-name>
+  <param-value>
+  /WEB-INF/config/member-servlet.xml
+  /WEB-INF/config/board-servlet.xml
+  /WEB-INF/config/login-servlet.xml
+  </param-value>
+  </init-param>
+  </servlet>
+  
+<servlet-mapping>
+<servlet-name>dispatcher</servlet-name>
+<url-pattern>/</url-pattern>
+</servlet-mapping> -->
+
+  <!-- 한글처리시 dispatcherServlet에서도 utf-8이 적용되어야 하지만
+  아래 필터도 처리가 되어야함 -->
+<filter>
+    <filter-name>characterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+        <param-name>encoding</param-name>
+        <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+        <param-name>forceEncoding</param-name>
+        <param-value>true</param-value>
+    </init-param>
+</filter>
+
+<filter-mapping>
+    <filter-name>characterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping> 
+</web-app>

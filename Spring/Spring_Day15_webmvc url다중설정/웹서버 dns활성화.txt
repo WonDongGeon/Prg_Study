@@ -1,0 +1,14 @@
+#웹서버 dns활성화
+1)maven web project 간단 웹서버 작동: localhost:8888/index.jsp
+2)ngrok사이트에서 ngrok.exe파일 다운로드 받고
+3)ngrok 회원가입 후 로그인 후 토큰발급
+4)토큰등록:ngrok config add-authtoken <token>
+5)ngrok http 8888 -> ngrok dns를 반환
+or 
+ngrok http http://localhost:8888
+6)https://~~~free.app/index.jsp : 핸드폰 또는 PC확인
+(접속시 바로 확인이 되지 않으므로 웹사이트에서 visit 버튼 클릭)
+
+참고)에러발생시 secure turnul 세션종료 후 다시 시작
+#오라클 서버 활성화
+ngrok tcp 1521
