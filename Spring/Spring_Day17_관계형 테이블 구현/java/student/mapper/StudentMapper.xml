@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="student.mapper.StudentMapper">
+
+    <!-- 학생 전체 조회 -->
+    <!-- Could not resolve type alias 'Student' -->
+    <!-- <select id="getAllStudents" resultType="Student"> -->
+    <select id="getAllStudents" resultType="student.vo.Student">
+        SELECT student_id, name, major FROM student
+    </select>
+
+    <!-- 학생 ID로 성적 조회 -->
+    <select id="getGradesByStudentId" resultType="student.vo.Grade" parameterType="int">
+        SELECT grade_id, student_id, subject, score
+        FROM grade
+        WHERE student_id = #{studentId}
+    </select>
+
+</mapper>

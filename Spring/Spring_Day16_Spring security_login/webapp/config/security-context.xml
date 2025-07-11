@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security-5.6.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+   <!-- Spring Security 설정 -->
+    <security:http auto-config="true" use-expressions="true">
+    	<!-- <security:intercept-url pattern="/login" access="permitAll"/> -->
+    	<security:intercept-url pattern="/css/**" access="permitAll"/>
+    	<security:intercept-url pattern="/js/**" access="permitAll"/>
+    	<security:access-denied-handler error-page="/all/403"/>
+    	   	
+    	<security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+        <security:intercept-url pattern="/user/**" access="hasRole('ROLE_USER')" />
+        <!-- 
+        <security:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+        <security:intercept-url pattern="/user/**" access="ROLE_USER" /> 
+        -->
+        <!-- <security:intercept-url pattern="/user/**" access="isAuthenticated()" /> -->
+        <security:intercept-url pattern="/all/**" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" />
+        
+        <!-- get방식 /login -->
+        <!-- security처리:post방식의 /login -->
+        <!-- login-page는 form상자의 처음로그인이 실패할 때 get /login호출 -->
+        <!-- default-target-url : 로그인 성공시 이동페이지 -->
+        <security:form-login 
+        login-page="/login"  
+        default-target-url="/user/index" 
+        authentication-failure-url="/login?error=true"
+        username-parameter="username"
+        password-parameter="password"
+        />
+        
+        <!-- get 방식의 logout 컨트롤러에 선언  -->
+        <!-- logout-url : post방식의 url을 주소의미 -->
+        <security:logout logout-url="/logout" logout-success-url="/login?logout=ture" />
+    </security:http>
+
+    <!--
+    단순하게 몇명의 사용자만 로그인이 필요한 경우 직접입력하여 로그인관리 
+    인증 정보 소스 (여기서는 메모리 기반 사용) 
+    로그인을 하면 인증권한을 부여하는데 이 속성은 authorities, 
+    http에서 access 권한을 가지게 됨
+    -->
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:user-service>
+            	<security:user name="root" password="{noop}1234" authorities="ROLE_ADMIN,ROLE_USER" />
+                <security:user name="admin" password="{noop}1234" authorities="ROLE_ADMIN" />
+                <security:user name="user" password="{noop}1234" authorities="ROLE_USER" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+</beans:beans>
