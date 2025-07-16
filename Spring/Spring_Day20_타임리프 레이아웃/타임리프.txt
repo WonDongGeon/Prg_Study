@@ -1,0 +1,174 @@
+##타임리프 기본설정
+#타임리프 라이브러리(pom.xml)
+<!-- Thymeleaf -->
+    <dependency>
+        <groupId>org.thymeleaf</groupId>
+        <artifactId>thymeleaf</artifactId>
+        <version>3.1.1.RELEASE</version>
+    </dependency>
+
+    <!-- Thymeleaf Spring Integration -->
+    <dependency>
+        <groupId>org.thymeleaf</groupId>
+        <artifactId>thymeleaf-spring5</artifactId>
+        <version>3.1.1.RELEASE</version>
+    </dependency>
+
+    <!-- Thymeleaf Layout Dialect (Optional) -->
+    <dependency>
+        <groupId>nz.net.ultraq.thymeleaf</groupId>
+        <artifactId>thymeleaf-layout-dialect</artifactId>
+        <version>3.2.0</version>
+    </dependency>
+
+#dispatcher-servlet.xml파일에서 타임리프 viewResolver등록
+templateResolver -> templateEngine ->thymeleafViewResolver
+
+#컨트롤러 생성
+@Controller
+public class HomeController {
+	@GetMapping("/index")
+	public String index(Model model) {
+		model.addAttribute("message","hello thymeleaf!!");
+		return "index"; //views/index.html
+	}
+}
+
+#view생성
+<p th:text="${message}">메시지 출력되는 공간입니다.</p>
+
+
+#한글깨짐
+<property name="characterEncoding" value="UTF-8" />
+
+##블록변경하기
+header.html 태그에 조각의 이름 지정(th:fragment)
+<header th:fragment="header"></header>
+
+"~" : viewresolver설정된 폴더를 기준폴더로 한 위치
+"~{fragments/headerviews/" : fragments/header.html 폴더의 파일을 의미함
+":: header" : header의 fragment로 설정된 이름
+
+변경하기
+<header th:replace="~{fragments/header :: header}">
+
+##레이아웃
+타임리프를 사용하려면 네임스페이스 선언 :<html xmlns:th="http://www.thymeleaf.org">
+레이아웃을 사용하려면 네임스페이를 선언:<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+
+#header.jsp(단편/조각의 이름 설정)
+<th:block th:fragment="header"></th:block>
+
+#footer.jsp(단편/조각의 이름 설정)
+<th:block th:fragment="footer"></th:block>
+
+#layout.html(사용할 레이아웃을 정의, 네임스페이스 선언확인)
+<th:block th:replace="~{fragments/header :: header}"></th:block>
+<main><th:block layout:fragment="content"></th:block></main>
+<th:block th:replace="~{fragments/footer :: footer}"></th:block>
+
+#home.html(실제 실행될 페이지/해당페이지에 layout.html적용되며, content블록만 교체됨)
+<html xmlns:th="http//www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="~{fragments/layout}">
+<th:block layout:fragment="content">
+<h3>HOME page</h3>
+<p>HOME 서비스입니다</p>
+</th:block>
+
+#위의 코드 실행시 정상작동하지 않을 경우 
+템플릿 엔진에 아래 코드 추가
+<property name="additionalDialects">
+        	<set>
+        	<bean class="nz.net.ultraq.thymeleaf.layoutdialect.LayoutDialect"/>
+        	</set>
+   </property>
+ </bean>
+
+##타임리프 문법
+#링크처리하기
+   <p th:text="링크사이트">메시지 출력되는 공간입니다.</p>
+   <a th:href="@{http://naver.com}">naver</a><br>
+   <a th:href="@{${site}}">naver</a><br>
+   <a th:href="@{'http://'+${sitename}+'.com'}">naver</a><br>
+   <a th:href="@{http://__${sitename}__.com}">naver</a><br>
+   <a href="/link?target=https://www.naver.com&type=external">naver</a><br>
+   <a th:href="@{/link(target=${site},type='external')}">naver</a><br>
+
+#변수처리하기
+   <span th:text="${username}">님</span><br>
+   <span>[[${username}]] sir!!</span><br>
+   <span>[(${username})] sir!!</span><br>
+
+#조건문
+   <p>size값을 확인한 후 장바구니에 상품이 있는지 유무를 화면에 표시</p>
+   <p th:if="${size > 0}">장바구니에 상품이 존재합니다.</p>
+   <p th:if="${size > 0}">장바구니에 상품이 존재하지 않습니다.</p>
+   
+   <p th:if="${size > 0}">장바구니에 상품이 존재합니다.</p>
+   <p th:unless="${size > 0}">장바구니에 상품이 존재하지 않습니다.</p>
+
+#반복문
+   <div th:each="p : ${products}">
+   <span th:text="'과일명:' + ${p.name}"></span> 
+   <span th:text="|과일명: ${p.name}|"></span> 
+   <span>가격:[[${p.price}]]</span>
+   </div>
+   
+   <ul th:each="p : ${products}">
+   <li>상품명:[[${p.name}]]가격:[[${p.price}]]</li>
+   </ul>
+   
+   <ul>
+   <li  th:each="p : ${products}">
+   상품명:[[${p.name}]]가격:[[${p.price}]]
+   </li>
+   </ul>
+   
+   <ul>
+   <li th:each="p : ${products}" 
+   th:text="|상품명:${p.name}가격:${p.price}|">
+ 	상품에 대한 상세 내용이 출력됩니다.
+   </li>
+   </ul>
+
+#자바스크립트 처리
+   	<p>javascript에서 ``를 이용한 $ { }를 사용하고 싶은 경우 
+   	어떻게 타임리프와 구분하여 사용하는가? 
+   	th:inline="javascript"를 이용하면 자바스크립트 안에서 model사용가능<p>
+   	<script th:inline="javascript"></script>
+#switch문   	
+   	<p>th switch문 : 기호를 분석하여 다른 데이터 변환하기 위해 switch</p>
+   	<div th:switch="${gender}">
+   	<span th:case="'M'">성별:남자</span>
+   	<span th:case="'W'">성별:여자</span>
+   	<span th:case="*">성별:알수 없음</span>
+   	</div>
+#event
+   	<p>th event : onclick : | |는 타임리프에서 문자화시켜주는 연산자</p>
+   	<button th:attr="onclick=|showProduct('${productName}','${productId}')|">제품안내</button>
+   	<script >
+   	function showProduct(name, id){
+   	alert("제품명:"+name+","+"제품아이디:"+id)	
+   	}
+#포맷   	
+   	</script>
+   	<p>format관련 타임리프(문자열, 날짜, 숫자포맷팅)</p>
+   	<p th:text="${#strings.substring(message,0,2)}"></p>
+   	<!-- <p th:text="${#dates.format(date,'yyyy-MM-dd HH:mm)}"></p> -->
+   	<p th:text="${#numbers.formatDecimal('1000',0,'COMMA',2,'POINT')}"></p>
+#시큐리티   	
+   	<p>security관련 </p>
+   	<!-- <div sec:authorize="hasRole('ROLE_ADMIN')"></div> -->
+   	
+   	<p>변수</p>
+   	<div th:with="hello='안녕하세요.'">
+   	<span th:text="${hello}"></span>
+   	</div>
+#폼처리
+   	<p>form관련 타임리프</p>
+   	<form th:action="@{/home}" method="post" th:object="${fruit}">
+   	<input type="text" th:field="*{name}">
+   	<input type="text" th:field="*{price}">
+   	<input type="submit" value="전송">
+   	</form>

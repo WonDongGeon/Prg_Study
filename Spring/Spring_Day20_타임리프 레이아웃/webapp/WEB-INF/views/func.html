@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="UTF-8">
+	<!-- <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
+    <title>My Page</title>
+</head>
+<body>
+   <p th:text="링크사이트">메시지 출력되는 공간입니다.</p>
+   <a th:href="@{http://naver.com}">naver</a><br>
+   <a th:href="@{${site}}">naver</a><br>
+   <a th:href="@{'http://'+${sitename}+'.com'}">naver</a><br>
+   <a th:href="@{http://__${sitename}__.com}">naver</a><br>
+   <a href="/link?target=https://www.naver.com&type=external">naver</a><br>
+   <a th:href="@{/link(target=${site},type='external')}">naver</a><br>
+   
+   <span th:text="${username}">님</span><br>
+   <span>[[${username}]] sir!!</span><br>
+   <span>[(${username})] sir!!</span><br>
+   
+   <p>size값을 확인한 후 장바구니에 상품이 있는지 유무를 화면에 표시</p>
+   <p th:if="${size > 0}">장바구니에 상품이 존재합니다.</p>
+   <p th:if="${size > 0}">장바구니에 상품이 존재하지 않습니다.</p>
+   
+   <p th:if="${size > 0}">장바구니에 상품이 존재합니다.</p>
+   <p th:unless="${size > 0}">장바구니에 상품이 존재하지 않습니다.</p>
+   
+   <div th:each="p : ${products}">
+   <span th:text="'과일명:' + ${p.name}"></span> 
+   <span th:text="|과일명: ${p.name}|"></span> 
+   <span>가격:[[${p.price}]]</span>
+   </div>
+   
+   <ul th:each="p : ${products}">
+   <li>상품명:[[${p.name}]]가격:[[${p.price}]]</li>
+   </ul>
+   
+   <ul>
+   <li  th:each="p : ${products}">
+   상품명:[[${p.name}]]가격:[[${p.price}]]
+   </li>
+   </ul>
+   
+   <ul>
+   <li th:each="p : ${products}" 
+   th:text="|상품명:${p.name}가격:${p.price}|">
+ 	상품에 대한 상세 내용이 출력됩니다.
+   </li>
+   </ul>
+   
+   <ul>
+   <li>잠시후 반복문 처리해볼것</li>
+   </ul>
+   	
+   	<p>javascript에서 ``를 이용한 $ { }를 사용하고 싶은 경우 
+   	어떻게 타임리프와 구분하여 사용하는가? 
+   	th:inline="javascript"를 이용하면 자바스크립트 안에서 model사용가능<p>
+   	<script th:inline="javascript">
+   	let jmessage="javascript message";
+   	let mymessage=`my ${jmessage}`;
+   	let mymessage2=`my2 [[${message}]]`;
+   	//alert(mymessage);
+   	//alert('[[${message}]]')
+   	//alert(`${mymessage2}`)
+   	</script>
+   	
+   	<p>th switch문 : 기호를 분석하여 다른 데이터 변환하기 위해 switch</p>
+   	<div th:switch="${gender}">
+   	<span th:case="'M'">성별:남자</span>
+   	<span th:case="'W'">성별:여자</span>
+   	<span th:case="*">성별:알수 없음</span>
+   	</div>
+   	
+   	<p>th event : onclick : | |는 타임리프에서 문자화시켜주는 연산자</p>
+   	<button th:attr="onclick=|showProduct('${productName}','${productId}')|">제품안내</button>
+   	<script >
+   	function showProduct(name, id){
+   	alert("제품명:"+name+","+"제품아이디:"+id)	
+   	}
+   	
+   	</script>
+   	<p>format관련 타임리프(문자열, 날짜, 숫자포맷팅)</p>
+   	<p th:text="${#strings.substring(message,0,2)}"></p>
+   	<!-- <p th:text="${#dates.format(date,'yyyy-MM-dd HH:mm)}"></p> -->
+   	<p th:text="${#numbers.formatDecimal('1000',0,'COMMA',2,'POINT')}"></p>
+   	
+   	<p>security관련 </p>
+   	<!-- <div sec:authorize="hasRole('ROLE_ADMIN')"></div> -->
+   	
+   	<p>변수</p>
+   	<div th:with="hello='안녕하세요.'">
+   	<span th:text="${hello}"></span>
+   	</div>
+   	
+   	<p>form관련 타임리프</p>
+   	<form th:action="@{/home}" method="post" th:object="${fruit}">
+   	<input type="text" th:field="*{name}">
+   	<input type="text" th:field="*{price}">
+   	<input type="submit" value="전송">
+   	</form>
+   	
+   	
+</body>
+</html>
+
+

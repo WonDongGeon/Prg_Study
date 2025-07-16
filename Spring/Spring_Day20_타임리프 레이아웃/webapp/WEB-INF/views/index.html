@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+	<meta charset="utf-8">
+    <title>My Page</title>
+</head>
+<body>
+<!-- ~은 타임리프의 viewResolver설정된 위치가 기준위치임을 알려주는 기호  -->
+	<header th:replace="~{fragments/header :: header}"></header>
+    <p th:text="${message}">메시지 출력되는 공간입니다.</p>
+    <footer th:replace="~{fragments/footer :: footer}"></footer>
+</body>
+</html>
