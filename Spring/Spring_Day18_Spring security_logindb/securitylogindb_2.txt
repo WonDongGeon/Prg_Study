@@ -1,0 +1,72 @@
+##로그인 db처리
+로그인처리 순서
+1) url접속 : http://localhost:8888/login/login
+2)필터실행 : DelegatingFilterProxy
+security-contex.xml에 등록된 <security:http>의 내용이 실행
+3)필터통과 후 memebr-dispatcher인  Dispatcher가 실행(이유:url-parttern -> /login/*)
+4)로그인폼이 화면에 나타났다고 가정하고 진행
+아이디, 비밀번호 입력후 일반적인 webmvc모델의 실행순서
+form action실행->컨트롤러->서비스->DAO
+
+****security login을 사용할 경우 ***
+1)security-contex.xml에 등록된 <security:http>의 내용이 실행(<security:form-login>)
+2)서비스는 security제공하는 내용으로 처리(implements UserDetailsService)
+username만 전달, password 전달되지 않는 상황
+username만 전달된다는 것은 스프링 시큐리가 username과 password를 비교한 후에 로그인 성공여부를 판단
+사용자가 하는 역할은 sql문의 값을 처리하는 코드 작성 3)번에 해당하는 부분
+#로그인이 성공할 경우
+사용자가 클래스를  작성하여 성공 bean을 호출
+#로그인이 실패할 경우
+사용자가 클래스를  작성하여 실패 bean을 호출
+
+<security:form-login default-target-url="/user/index"> 대신하여 아래의 코드 변경
+<security:form-login authentication-success-handler-ref="loginSuccess" >
+<!-- 접근권한이 없는 계정이 접근했을 때 클래스로 접근불가처리 -->
+<security:access-denied-handler ref="accessDenied"/> 
+<!--성공과 접근권한 실패시 사용자 bean객체 생성  -->
+<bean id="loginSuccess" class="login.CutomerLoginSuccessHandler"/>
+<bean id="accessDenied" class="login.CutomerAccessDeniedHandler"/>
+CutomerLoginSuccessHandler 는 구현할 대상 : AuthenticationSuccessHandler
+CutomerAccessDeniedHandler는 구현할 대상 : AccessDeniedHandler
+
+#로그인 테스트
+시나리오:db에는 username:user1, password:1234가 입력된 상태
+login폼에 일치하는 username과 password를 입력했을 경우 그렇지 않을 경우
+다음과 같은 오류가 발생
+There is no PasswordEncoder mapped for the id "null"
+
+문제해결방법 :
+security-context.xml파일에 다음 내용을 추가 security:authentication-manager에 password-encoder ref를 추가하면 UserDatailsService에서 암호를 적용하여 처리하게 됨.
+즉 BCryptPasswordEncoder 객체를 주입해야함
+<security:authentication-manager>
+<security:authentication-provider user-service-ref="loginService">
+	<security:password-encoder ref="bpe"/>
+</security:authentication-provider>
+</security:authentication-manager>
+
+<bean id="bpe" 
+class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+
+#폼에서 넘어온 값은 암호가 된다.
+db가 암호가 된 경우
+User user=new User(member.getUsername(),member.getPassword(),authorities);
+
+db가 암호화가 안된 경우
+User user=new User(member.getUsername(), 
+new BCryptPasswordEncoder().encode(member.getPassword()),authorities);
+
+3)dao는 사용자 직접 구현(sql문)
+
+
+추가사항)
+시나리오1: localhost:8888 실행할 경우 url page가 없는 경우 오류가 발생하는데 무조건 로그인페이지 이동하는 방법?
+<security:http>
+ <security:http-basic entry-point-ref="authenticationEntryPoint" />
+</http>
+<bean id="authenticationEntryPoint" 
+class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
+        <constructor-arg name="loginFormUrl" value="/login/login"/>
+</bean>
+
+시나리오2:인증된 사용자만 페이지를 볼 수 있으며 그 외 사용자는 로그인 페이지로 이동
+<security:intercept-url pattern="/*" access="isAuthenticated()"/>

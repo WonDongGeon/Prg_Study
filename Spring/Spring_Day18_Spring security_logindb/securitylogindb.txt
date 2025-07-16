@@ -1,0 +1,220 @@
+#프로젝트 : securityloigndb
+2)pom.xml설정(maven update, java bulid path 설정)
+3)webapp/WEB-INF/web.xml설정
+#리스너(전역설정)
+root-context.xml :db설정(resource사용해서 파일을 포함)
+또는 별도로 설정할 경우
+db-config.xml (데이터베이스 설정정보)
+mybatis-config.xml(특정한 db사용할 경우 설정)
+security-config.xml(시큐리티)
+<context-param>에 넣어서 사용함
+
+#필터 : 한글처리, DelegatingFilterProxy 시큐리티 필터
+
+#서블릿 : 로그인, 회원가입, 게시판, 챗팅 등의 기능을 폴더로 구분
+
+폴더구분은 서블릿설정도 별도로 구성
+
+로그인 : 서블릿이름(login-dispatcher), 설정파일(login-servlet.xml), url패턴(/login/*)
+login폴더 -> Controller, Service, Repository, vo, etc..
+WEB-INF/config/login-servlet.xml -> @스캔, viewResolver
+WEB-INF/views/login -> jsp
+
+회원(회원가입, 회원정보수정, 아이디찾기, 패스워드 찾기, 탈퇴) :
+서블릿이름(member-dispatcher), 설정파일(member-servlet.xml), url패턴(/member/*)
+member폴더 -> Controller, Service, Repository, vo, etc..
+WEB-INF/config/member-servlet.xml -> @스캔, viewResolver
+WEB-INF/views/member -> jsp
+
+4) 설정 후에 서버를 improt하여 서버 실행 후 오류사항을 먼저 확인해야함.
+
+5)로그인, 회원가입 컨트롤러를 만들고(login/LoginController.java, member/MemberController.java)
+WEB-INF/config/login-servlet.xml, member-servlet 설정(component scan, view resolver설정)
+views/login/login.jsp페이지 만들기(get : /login/login)
+views/member/register.jsp페이지 만들기 (get : /member/register)
+
+6)security-context.xml 파일 설정
+Actor정하기(사용자) : 일반 사용자(user), 관리자(admin), 전체관리자(root)
+Actor의 권한 주소범위 정하기 :
+누구나 접근할 수 있는 범위 -> / login, /member/register등 특정한 주소
+일반사용자(user) : /login/* -> ROLE_USER
+관리자(admin) : /admin/* -> ROLE_ADMIN
+전체관리자(root) : 전체허용 -> ROLE_ROOT
+
+##아래의 코드는 설정파일로 설정한 사항이며 아래에 수정한 내용이 있음
+<!-- url확인, 로그인, 로그아웃(http) 
+/ 회원에 대한 로그인 정보(authentication-manager) 
+intercept-url을 자바파일에서 처리가능
+회원에 대한 로그인 정보를 데이터베이스로 사용하기위해 자바를 이용
+-->
+
+    <security:http auto-config="true" use-expressions="true">
+        <security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+        <security:intercept-url pattern="/user/**" access="hasRole('ROLE_USER')" /> 
+   
+        <security:form-login 
+        login-page="/login/login"  
+        default-target-url="/user/index" 
+        authentication-failure-url="/login/login?error=true"
+        username-parameter="username"
+        password-parameter="password"
+        />
+  
+        <security:logout logout-url="/logout" 
+        logout-success-url="/login?logout=ture" />
+    </security:http>
+   
+    <security:authentication-manager>
+        <security:authentication-provider>
+            <security:user-service>
+            	<security:user name="root" password="{noop}1234" authorities="ROLE_ADMIN,ROLE_USER" />
+                <security:user name="admin" password="{noop}1234" authorities="ROLE_ADMIN" />
+                <security:user name="user" password="{noop}1234" authorities="ROLE_USER" />
+            </security:user-service>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+#변경사항
+<!-- url확인, 로그인, 로그아웃(http) 
+/ 회원에 대한 로그인 정보(authentication-manager) 
+intercept-url을 자바파일에서 처리가능 
+회원에 대한 로그인 정보를 데이터베이스로 사용하기 위해 자바를 이용
+-->
+    <security:http auto-config="true" use-expressions="true">   	
+    	<security:intercept-url pattern="/admin/**" access="hasRole('ROLE_ADMIN')" />
+        <security:intercept-url pattern="/user/**" access="hasRole('ROLE_USER')" />
+        
+        <security:form-login 
+        login-page="/login"  
+        default-target-url="/user/index" 
+        authentication-failure-url="/login?error=true"
+        username-parameter="username"
+        password-parameter="password"
+        />
+        
+        <security:logout logout-url="/logout" logout-success-url="/login?logout=ture" />
+    </security:http>
+
+<!-- provider user-service-ref 사용한다는 의미는 자바파일을 사용한다는 의미
+이는 mvc모델을 사용하겠다는 의미 
+loginService는 login/LoginService는 객체를 사용자가 만들지만
+security에서 상속할 객체를 받아서 처리 -->
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="loginService">
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+##문제점 : 서버를 실행한 후에 user-service-ref ="loginService"에서
+loginService bean을 찾을 수 없는 문제가 발생
+원인은 지역설정에 component scan이 이루어지므로 전역에서는 사용할 수 없음
+이를 해결하기 위해 전역에서 다음과 같이 설정함
+
+#root-context.xml
+<!-- servlet설정에 componet-scan을 할 경우
+변수의 지역이 한정되므로 전역 context에 설정해야 security-context.xml 파일의
+loginService를 사용할 수 없는 상태가 됨.
+이를 전역에 사용하기 위해서는 전역객체에 componet-sacn처리를 해야함.
+방법은 root-context.xml 파일에 객체를 생성하거나
+bean을 해당 파일에서 등록해줌 -->
+
+<!-- 첫번째 방법 : component-scan을 할 경우 @Service선언 -->
+<!-- <context:component-scan base-package="login"/> -->
+
+<!-- 두번째 방법 : @Service선언을 하지 않고 bean을 생성 -->
+<bean id="loginService" class="login.LoginService"/>
+<!-- 결론 : 두 방법 중 어느것이 효율적인지 생각, 하나만 결정하여 처리 -->
+
+#확인사항 : http://localhost:8888/login/login에 접속하여 username이 잘 출력되는지 확인
+
+7) 회원가입을 해야 로그인 처리가 가능하므로 회원가입부분 확인
+#데이터베이스 처리
+
+drop table member;
+
+create table member(
+username varchar2(12) primary key,
+password varchar2(12) not null,
+email varchar2(50),
+role varchar2(10) not null,
+regdate date
+);
+
+insert into member 
+values('user1','1234','user1@mysite.com','ROLE_USER',sysdate);
+
+commit;
+
+#자바 파일 생성
+MemberController.java, MemberService.java, MemberMapper.xml, MemberMapper.java, Member.java
+만약에 JSP폼에서 전달되는 값만 처리할 경우 값에 대한 폼만 별도로 작성
+
+#데이터베이스를 사용하기 위한 설정파일 확인
+mybatis-config.xml(특정한 db사용할 경우 설정)
+
+#초기에 설정한 mybatis
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+<context:property-placeholder location="classpath:db.properties"/>
+<!-- hikari datasource는 설정파일과 데이터소스가 분리되어 있다. -->
+<bean id="hikariconfig" class="com.zaxxer.hikari.HikariConfig">
+<property name="driverClassName" value="${db.driverClassName}"></property>
+<property name="jdbcUrl" value="${db.url}"></property>
+<property name="username" value="${db.username}"></property>
+<property name="password" value="${db.password}"></property>
+</bean>
+<!-- 최종사용할 객체 -->
+<bean id="hikariDataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+<constructor-arg ref="hikariconfig"/>
+</bean>
+
+<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+<property name="dataSource" ref="hikariDataSource"/>
+</bean>
+
+
+<!-- MemberMapper.xml 파일을 스캔하는 역할(객체로 변환) -->
+<mybatis-spring:scan base-package="member"/> 
+
+</beans>
+
+#새로운 mybatis환경설정
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+
+  <!-- 데이터베이스 연결 설정 -->
+  <environments default="development">
+    <environment id="development">
+      <transactionManager type="JDBC">
+        <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+        <property name="username" value="test"/>
+        <property name="password" value="1111"/>
+      </transactionManager>
+      <dataSource type="POOLED">
+        <property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
+        <property name="url" value="jdbc:oracle:thin:@localhost:1521:xe"/>
+        <property name="username" value="test"/>
+        <property name="password" value="1111"/>
+      </dataSource>
+    </environment>
+  </environments>
+
+  <!-- 매퍼 파일 경로 설정 -->
+  <mappers>
+    <mapper resource="board/mapper/MemberMapper.xml"/>
+    <!-- <mapper class="board/mapper/MemberMapper"/> -->
+  </mappers>
+
+</configuration>
+
