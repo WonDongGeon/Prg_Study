@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+<!-- servlet설정에 componet-scan을 할 경우 
+변수의 지역이 한정되므로 전역context에 설정해야 security-context.xml 파일의
+loginService를 사용할 수 없는 상태가 됨.
+이를 전역에 사용하기 위해서는 전역객체에  component-scan처리를 해야함.
+방법은 root-context.xml파일에 객체를 생성하거나
+bean을 해당 파일에서 등록해줌
+-->
+<!-- 첫번째 방법: component-scan을 할 경우 @Service선언 -->
+<!-- <context:component-scan base-package="login"/>  -->
+
+<!-- 두번째 방법: @Service선언을 하지 않고 bean을 생성 -->
+<bean id="loginService" class="login.LoginService"/>
+<!-- 결론 : 두방법 중 어느것이 효율적인지 생각, 하나만 결정하여 처리 -->
+
+</beans>

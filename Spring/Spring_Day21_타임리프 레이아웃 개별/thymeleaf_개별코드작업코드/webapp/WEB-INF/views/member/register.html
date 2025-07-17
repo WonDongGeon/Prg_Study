@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="~{fragments/layout}">
+<th:block layout:fragment="content">
+
+<h1>회원가입</h1>
+<form action="/member/register" method="post">
+<div>
+<label>아이디</label>
+<input type="text" name="username">
+</div>
+<div>
+<label>비밀번호</label>
+<input type="password" name="password">
+</div>
+<div>
+<label>이메일</label>
+<input type="email" name="email">
+</div>
+<div>
+<input type="submit" value="회원가입">
+<!-- 회원가입폼에 있는 내용 전송시 403오류가 발생하는 원인 해결 -->
+<input type="hidden" 
+th:name="${_csrf.parameterName}"
+th:value="${_csrf.token }" />
+</div>
+</form>
+
+</th:block>

@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html xmlns:th="http//www.thymeleaf.org"
+xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" 
+layout:decorate="~{fragments/layout}">
+
+<th:block layout:fragment="content">
+	<h3>기능을 구현하기</h3>
+    <p th:text="${message}">구현한 내용을 표시할 공간입니다.</p>
+</th:block>

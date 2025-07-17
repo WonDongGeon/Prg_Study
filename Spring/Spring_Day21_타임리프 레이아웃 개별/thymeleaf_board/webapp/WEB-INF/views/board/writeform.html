@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{fragments/layout}">
+  <th:block layout:fragment="content">
+    <div class="container mt-5">
+      <h2>입력 폼</h2>
+      <form th:action="@{/board/write}" method="post" enctype="multipart/form-data">
+        <!-- 제목 -->
+        <div class="mb-3">
+          <label for="title" class="form-label">제목</label>
+          <input type="text" class="form-control" id="title" name="title" required 
+                 th:value="${boardForm?.title}"/>
+        </div>
+
+        <!-- 내용 -->
+        <div class="mb-3">
+          <label for="content" class="form-label">내용</label>
+          <textarea class="form-control" id="content" name="content" rows="4" required
+                    th:text="${boardForm?.content}"></textarea>
+        </div>
+
+        <!-- 첨부파일 -->
+        <div class="mb-3">
+          <label for="attachment" class="form-label">첨부파일</label>
+          <input type="file" class="form-control" id="attachment" name="attachment"/>
+        </div>
+
+        <!-- 작성자 -->
+        <div class="mb-3">
+          <label for="author" class="form-label">작성자</label>
+          <input type="text" class="form-control" id="author" name="author" required 
+                 th:value="${boardForm?.author}"/>
+        </div>
+
+        <!-- CSRF 토큰 -->
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
+        <button type="submit" class="btn btn-primary">제출</button>
+      </form>
+    </div>
+  </th:block>
+
+</html>
