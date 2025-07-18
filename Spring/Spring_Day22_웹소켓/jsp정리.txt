@@ -1,0 +1,93 @@
+서버실행환경
+web.xml설정(리스너,필터,서블릿등록)
+스크립틀릿태그
+디렉티브태그
+액션태그<forward><include><param><usebean>
+내장객체
+표준태그(jstl태그)
+파일업로드 MultipartRequest
+유효성검사
+다국어처리
+시큐리티
+예외처리태그(errorPage)
+필터
+리스너
+서블릿
+세션
+쿠키
+데이터베이스연결
+
+
+#서버실행환경
+#web.xml설정(리스너,필터,서블릿등록)
+#jsp 스크립틀릿태그 : <% %>
+<% %>	스크립틀릿: 자바 코드 삽입
+<%= %>	표현식(Expression): 값을 출력
+<%! %>	선언문(Declaration): 변수나 메서드 선언
+<%@ %>	지시어(Directive): JSP 파일에 대한 설정
+JSP 지시어의 종류(디렉티브태그)
+<%@ page %><%@ include %><%@ taglib %>
+gpt 검색 : <%@ page %> 지시어에서 사용되는 주요 변수(속성)
+
+#액션태그<jsp:forward><jsp:include> : <%>일반html태그처럼 보이지 않습니다. 자연스럽게 html 형식으로 표시하기 위한 수단
+
+#내장객체
+request : 서버로 들어오는 정보를 가지고 있는 객체(입력stream객체를 얻을 수 있음)
+response : 서버로 나가는 정보를 가지고 있는 객체(입력outputstream객체를 얻을 수 있음)
+out :출력
+
+request ,session,application은 setAttribute를 가지고 있는 저장 객체이다.
+단지 저장 범위가 다르다.
+config:설정파일(web.xml)을 가지고 오는 역할
+pageContext : page전역에 있는 객체들을 가지고 올 수 있다.
+
+#표준태그(jstl태그) 
+c,fmt,sql,x,fn
+
+#파일업로드 MultipartRequest
+
+#유효성검사 : 
+
+#다국어처리
+여러 언어에 맞는 .properties 파일 작성하여 fmt를 이용하여 언어를 번역하는 역할
+
+#시큐리티
+인증(Authentication)과 인가(Authorization)
+web.xml에서 설정
+<security-constraint>
+    <web-resource-collection>
+        <web-resource-name>Protected Area</web-resource-name>
+        <url-pattern>/secure/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+        <role-name>USER</role-name>
+    </auth-constraint>
+</security-constraint>
+
+<login-config>
+    <auth-method>BASIC</auth-method>
+    <realm-name>My Realm</realm-name>
+</login-config>
+
+#예외처리태그(errorPage)
+<%@ page errorPage="error.jsp" %> : 에러가 발생할 때 error.jsp로 이동
+<%@ page isErrorPage="true" %> : error.jsp페이지 내에 입력
+web.xml에서 설정
+<error-page>
+    <exception-type>java.lang.ArithmeticException</exception-type>
+    <location>/error.jsp</location>
+</error-page>
+
+#리스너:특정 이벤트가 발생할 때 자동으로 실행되는 콜백 클래스
+#필터
+#서블릿
+init()	서블릿 초기화 시 1회 호출
+service()   서비스
+doGet()	HTTP GET 요청 처리
+doPost()	HTTP POST 요청 처리
+doPut(), doDelete()	PUT, DELETE 요청 처리 (필요 시 구현)
+destroy()	서블릿 종료 시 호출, 자원 해제 작업 수행
+
+#세션
+#쿠키
+#데이터베이스연결
