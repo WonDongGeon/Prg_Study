@@ -1,0 +1,178 @@
+1)restapi프로젝트 생성
+
+2)pom.xml
+<build>
+<plugins>
+<plugin>
+<artifactId>maven-war-plugin</artifactId>
+<version>3.2.3</version>
+</plugin>
+</plugins>
+</build> 
+<properties>
+<maven.compiler.source>1.8</maven.compiler.source>
+<maven.compiler.target>1.8</maven.compiler.target>
+</properties>
+<!-- jsp api, spring webmvc, slf4j, logback, lombok -->
+<dependencies>
+
+<dependency>
+<groupId>org.apache.tomcat</groupId>
+<artifactId>tomcat-jsp-api</artifactId>
+<version>9.0.71</version>
+</dependency>
+	
+<dependency>
+    <groupId>org.springframework</groupId>
+    <artifactId>spring-webmvc</artifactId>
+    <version>5.3.39</version>
+</dependency>
+<dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>1.7.25</version>
+</dependency>
+
+<dependency>
+  <groupId>ch.qos.logback</groupId>
+  <artifactId>logback-classic</artifactId>
+  <version>1.2.3</version>
+</dependency>
+
+<dependency>
+    <groupId>org.projectlombok</groupId>
+    <artifactId>lombok</artifactId>
+    <version>1.18.36</version>
+    <scope>provided</scope>
+</dependency>
+</dependencies>
+</project>
+
+3)web.xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="4.0" xmlns="http://xmlns.jcp.org/xml/ns/javaee" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee 
+http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd">
+
+<servlet>
+  <servlet-name>dispatcher</servlet-name>
+  <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+</servlet>
+  
+  <servlet-mapping>
+  <servlet-name>dispatcher</servlet-name>
+  <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  
+<filter>
+    <filter-name>characterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+        <param-name>encoding</param-name>
+        <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+        <param-name>forceEncoding</param-name>
+        <param-value>true</param-value>
+    </init-param>
+</filter>
+
+<filter-mapping>
+    <filter-name>characterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+</filter-mapping> 
+</web-app>
+
+4)dispatcher-servlet.xml
+<context:component-scan base-package="restapi"/>
+<mvc:annotation-driven/> 
+
+<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+<property name="prefix" value="/WEB-INF/"/>
+<property name="suffix" value=".jsp"/>
+</bean>
+
+5)MainController.java
+@Controller
+public class MainController {
+@GetMapping("/")
+public String index() {
+return "index"; 
+}
+}
+WEB-INF/index.jsp파일 생성하여 테스트하기
+
+6)컨트롤러에 @ResponseBody 붙으면 페이지가 아닌 문자열 리턴
+페이지하고는 전혀 상관없는 코드임
+@GetMapping("/myname")
+@ResponseBody
+public String myname() {
+return "myname"; 
+}
+
+7)함수마다 @ResponseBody 번거로움
+이를 해결하는 컨트롤러가 @RestController임
+
+8)@RestController는 함수에 @ResponseBody없어도 문자열을 리턴하는 역할
+@RestController 
+public class RestApiController {
+@GetMapping("/myjson")
+public String myjson() {
+return "{\"name\":\"kim\",\"age\":\"25\"}";
+}
+
+9)문자열 대신 객체를 반환하면 json으로 변경해주는 역할
+@GetMapping("/objectjson")
+public Person objectjson() {
+Person person=new Person();
+person.setName("hongkildong");
+person.setAge(30);
+return person;
+}
+
+@Data
+@ToString
+public class Person {
+	String name;
+	int age;
+}
+
+위의 코드는 오류가 발생함.
+이에 필요한 라이브러리
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-core</artifactId>
+    <version>2.17.2</version>
+</dependency>
+
+<dependency>
+    <groupId>com.fasterxml.jackson.core</groupId>
+    <artifactId>jackson-databind</artifactId> 
+    <version>2.17.2</version>
+</dependency>
+	
+10)restapi는 문자열을 반환하는 함수이므로 결과를 받아서 index.jsp에서 화면에 처리하는 역할을 함
+<div><button id="execbtn">실행</button></div>
+<div id="result"></div>
+<script>
+const execbtn=document.getElementById("execbtn");
+const div=document.getElementById("result");
+execbtn.addEventListener("click",(data)=>{
+	const xhr = new XMLHttpRequest();
+	xhr.open('GET', '/objectjson', true);
+	xhr.send();
+	
+	xhr.onload = function () {
+	  if (xhr.status === 200) {
+	    const result = JSON.parse(xhr.responseText);
+	    console.log(result)
+	    div.innerText+=result["name"]+","+result["age"];
+	  } else {
+	    console.error('요청 실패:', xhr.status);
+	  }
+	};
+
+	xhr.onerror = function () {console.error('요청 중 오류 발생');};
+});
+</script>

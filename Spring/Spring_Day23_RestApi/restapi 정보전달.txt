@@ -1,0 +1,83 @@
+#restapi에서 정보를 제공하는 방법
+
+1) return "{\"name\":\"kim\",\"age\":\"25\"}"; 정보를 직접 입력하는 방식
+
+2) 객체를 생성하고 객체를 리턴하는 방법
+Person person = new Person();
+		person.setName("hongkildong");
+		person.setAge(30);
+		return person;
+
+확인사항) 구조적으로 반드시 객체가 존재해야한다.
+
+3) xml, json방식으로 서비스하는 방법
+일반적으로 파일을 로드해서 xml, json을 불러온 후 
+사용 자바프로그램으로 객체에 데이터를 입력하고 이 객체를 xml or json 형태로 변환
+
+#자바에서 xml을 만드는 방법
+
+#자바에서 json을 만드는 방법
+
+contentType은 서버에 보낼 데이터의 정류를 알려주는 역할
+application/x-www-form-urlencoded : key1=value1&key2=value2
+multipart/form-data : 파일 업로드시(이미지 문서 등 파일)
+application/json : {"key1" : "value1", "key2" : "value2"}
+application/xml : xml문서 <data><key1>value1</key1><kye2>value2</key2></data>
+text/plain : text전송
+text/html : html 문서임을 확인
+image/jpeg, image/png, image/gif, applicaiton/octet-stream
+
+curl -X PUT http://localhost:8888/api/member -H "Content-Type:application/json" -d "{\"username\":\"user1",\"password\":\"newpass123",\"email\":\"user1@example.com\"}"
+
+--------------------------------------------------------------------------------------------------------------------------
+
+#데이터처리 method
+입력:post : http://localhost:8888/api/member
+선택출력:get: http://localhost:8888/api/member
+전체출력:get: http://localhost:8888/api/members
+수정:put: http://localhost:8888/api/member
+삭제:delete: http://localhost:8888/api/member
+
+#입력데이터를 처리하는 방법
+http://localhost:8888/api/member?username=xxx&password=xxx&email=xxx(get방식/불가)
+post방식처리 body, 데이터라는 이름을 사용하여 객체로 전달
+{"username":"admin","password":"1234","email":"admin@naver.com"}   :객체
+"{"username":"admin","password":"1234","email":"admin@naver.com"}" :문자열
+문자열을 전송하는 이유는 네트워상에서는 모든 데이터는 문자로 전송
+위의 코드에서 문제점은?"""""
+"{"username":"admin","password":"1234","email":"admin@naver.com"}"
+"{'username':'admin','password':'1234','email':'admin@naver.com'}" : ' '는 json에서 사용이 안됨
+'{"username":"admin","password":"1234","email":"admin@naver.com"}' :사용이 가능
+문제는 curl같은 환경에서 사용불가
+이문제를 해결하기 위해 " "사이에 있는  "앞에 \"함으로서 특수문자 취급
+"{\"username\":\"admin\",\"password\":\"1234\",\"email\":\"admin@naver.com\"}"
+
+#curl에서 url을 처리하는 방식
+curl 주소 -v:view -X:method -H : header -d : body or data
+주의 사항은 옵션은 대소문자를 구분한다.
+curl  http://localhost:8888/api/member -v -X POST -H "Content-Type:application/json" -d "{\"username\":\"admin\",\"password\":\"1234\",\"email\":\"admin@naver.com\"}"
+
+curl http://localhost:8888/api/members : 입력확인
+
+#javascript에서 url을 처리하는 방식
+const xhr = new XMLHttpRequest();
+xhr.onload = function () {console.log(xhr);}
+xhr.open('POST', '/api/member', true);
+xhr.setRequestHeader("Content-Type","application/json");
+let data2=JSON.stringify(
+{"username":"user6"
+,"password":"1234"
+,"email":"user6@naver.com"
+}
+);
+xhr.send(data2);
+
+#수정
+curl  http://localhost:8888/api/member -v -X PUT
+-H "Content-Type:application/json" 
+-d "{\"username\":\"admin\",\"password\":\"1234\",\"email\":\"admin@naver.com\"}
+
+#삭제
+curl  http://localhost:8888/api/member -v -X DELETE
+-H "Content-Type:application/json" 
+-d "{\"username\":\"admin\"}
