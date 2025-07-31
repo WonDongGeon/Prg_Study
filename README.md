@@ -1,19 +1,6 @@
 # Study
 
 학습한 내용 코드 파일(설명은 주석 및 텍스트 파일)
-
-```
-Visual Basic Code를 이용한 HTML 공부 코드 (HTML)
-```
-```
-Eclipse와 sts3를 이용한 JSP 공부 코드 (JSP)
-```
-```
-Eclipse와 sts3를 이용한 Spring 공부 코드 (Spring)
-```
-```
-sts4를 이용한 JAVA 공부 코드 (JAVA)
-```
 주의사항
 ```
 HTMLWORK_Day11,12는 webpack을 진행하는데, node_modules 폴더의 내용이 너무 커서 업로드가 불가능함(node_modules 제외)
