@@ -1,6 +1,6 @@
 # 학습한 내용 코드 파일(설명은 주석 및 텍스트 파일)
 
-###주의사항
+### 주의사항
 ```
 HTMLWORK_Day11,12는 webpack을 진행하는데, node_modules 폴더의 내용이 너무 커서 업로드가 불가능함(node_modules 제외)
 
