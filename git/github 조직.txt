@@ -1,0 +1,64 @@
+#관리자가 조직만들기
+
+#팀원초대하기
+
+#팀 원격저장소 만들기(빈공간)
+원저장소 생성 후 아래 코드는 로컬 저장소 생성시 사용함
+echo "# www" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/seoilgitwork2/www.git
+git push -u origin main
+
+#로컬저장소(팀장-Manager)/기본셋팅(pom.xml, 폴더구조, webapp아래 폴더 및 파일)
+rm -rf www
+mkdir www
+cd www
+echo "# www" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/seoilgitwork2/www.git
+ls
+git push(오류:원인은 원격저장소에서 main branch가 존재하지 않아 발생하는 오류)
+git push --set-upstream origin main 
+(git push -u origin main) /로컬브런치의 main브런치를 원격저장소의 main를 만들어서 올려라
+
+#팀장이 develop 브런치등 필요한 브런치를 생성하고 업로드(main-develop)
+git checkout -b develop
+
+#github 원격저장소에서 브런치 확인(main존재)
+
+#팀장 로컬저장소에서 develop 브런치를 원격저장소에 적용하기
+git push --set-upstream origin develop
+(git push -u origin develop)
+
+#팀장이 조직을 만들고 원격저장소(github)를 만들고
+팀장이 로컬저장소를 만들고(팀장PC) 기본셋팅완료상태.
+개발자 B PC 원격저장소 프로젝트를 clone을 하여 개발을 실시할 예정임.
+
+문제사항 : 아래의 코드를 실행할 경우 main branch의 내용이 다운로드 되는데 이를 변경하여 develop로 다운로드 하는 방법은?
+github-프로젝트 선택-setting-Default branch 변경한 후 clone하면 해결
+
+#개발자 B는 팀프로젝트를 복사해오며 프로젝트명은 www에서 develop_b로 변경
+git clone https://github.com/seoilgitwork2/www.git develop_b
+cd develop_b
+dir
+git branch : main만 존재함(git branch -r : 리모트 branch확인)
+git checkout -b feature/b
+git branch
+notepad README.md : 내용을 feature b write수정
+git add .
+git commit -m "feature b"
+git push -u origin feature/b
+
+#팀장 또는 manager가 원격저장소에서 확인 후 합치기
+pull request, mege confirm
+
+#개발자 A는 개발자B가 push하기전에 기본적인 프로젝트를 clone
+충돌이 발생하게 되고 이를 해결하기 위한 방법을 확인
+
+#개발자 C는 개발자B가 push하기전에 기본적인 프로젝트를 clone

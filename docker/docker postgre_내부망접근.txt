@@ -1,0 +1,84 @@
+default-vpc-0be5a75b02d03b6f9
+
+#데이터베이스 접속시 필요한 사항
+1)드라이버
+2)접속url
+3)접속user
+4)접속password
+5)접속하고자하는 db명
+
+#DB클라이언트 프로그램은 다양하게 존재
+pgadmin
+이클립스
+
+jdbc:postgresql://
+database-1.cx8kwsem4cke.ap-northeast-2.rds.amazonaws.com
+:5432/rdsdb
+
+psql -h database-1.cx8kwsem4cke.ap-northeast-2.rds.amazonaws.com -U postgres -d rdsdb -p 5432
+
+#docker에서 postgre생성
+docker run --name my-postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=mydb -p 5432:5432 -v pgdata:/var/lib/postgresql/data -d postgres:17
+
+#docker내부에서 접속하기(tomcat->postgre db)
+docker tomcat server에서 linux에서 postgre client설치 후 접속 확인
+apt update
+apt install -y postgresql-client
+docker내부에서 접속하기 위해서는 postgre 서버의 주소를 확인해야함
+
+#postgre서버에서 ip주소 확인
+docker ps
+docker exec -it 85 bash
+apt update
+apt install net-tools
+ifconfig
+
+#docker tomcat에서 postgre서버에 접속하기
+psql -h 172.17.0.4 -U postgres -d mydb -p 5432
+
+#연결도
+web : nginx(front)-tomcat(back)-postgre(db)
+사용자 설정 : postgre(db)를 db client프로그램으로 연결해서 데이터베이스를 구성하려고 할 경우 클라이언트가 접속할 수 있게 ssh포트를 활성화(linux접속)시켜야함.
+nginx(front)/tomcat(back)/postgre(db) 3개의 서버에서 22포트를 활성화시켜 외부 접속이 가능하게게 해야함.
+전체 서버의22번을 활성화시키지 않고 내부적으로 linux 1대를 서버를 통제하는 역할을 수행할 경우
+한대의 리눅스 서버를 구성하고 이 서버를 통해서 각각의 서버에 접속하는 방법도 있음
+
+만약에 Controller linux docker를 만들경우 22번 포트가 외부 활성화되고
+각 서버의 ip주소/포트번호를 확인
+nginx : 172.17.0.2:80 (ssh uesername, password)
+tomcat:172.17.0.3:8080(ssh uesername, password)
+postgre:172.17.0.4:5432(ssh uesername, password)
+controller:172.17.0.4:22(ssh uesername, password)
+
+
+# Dockerfile 파일 작성
+------------------------------
+FROM ubuntu:22.04
+# 기본 패키지 업데이트 및 openssh-server 설치
+RUN apt-get update && \
+    apt-get install -y openssh-server && \
+    mkdir /var/run/sshd
+# root 계정 비밀번호 설정 (예: root/rootpassword)
+RUN echo 'root:1234' | chpasswd
+# SSH 접속 시 PAM 제한 완화
+RUN sed -i 's/^#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config && \
+    sed -i 's/^#PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+# 포트 22 노출
+EXPOSE 22
+# SSH 데몬 실행
+CMD ["/usr/sbin/sshd", "-D"]
+-----------------------------------
+#docker 빌드하기
+docker build -t ubuntu-ssh .
+
+#docker실행
+docker run -d --name ubuntu-ssh -p 2222:22 ubuntu-ssh
+
+#docker접속하기
+ssh root@localhost -p 2222
+
+
+
+
+
+

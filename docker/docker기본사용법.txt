@@ -1,0 +1,132 @@
+##docker이해
+#docker를 사용하는 이유?
+vmware 운영체제만 설치
+docker 운영체제+프로그램=컨테이너(image 로딩)
+운영체제만으로도 구성이 가능
+운영체제만 구성+사용자 구성한 프로그램=build(image구성)
+vmware(사이즈up, weight)
+docker(사이즈down, light)
+
+#시나리오)리눅스운영체제를 설치하려면 
+1)이미지파일이 있어야 하고
+2)이미지를 로딩하면 container가 생성되고
+3)내가 만들고 싶은 container에 대해 build를 실행하면 이미지가 생성된다.
+
+#image
+docker pull <image_name>
+
+#container
+docker run <options> <image_name>
+
+#builds
+docker build -t <image_name> <path_to_dockerfile>
+
+#추가명령
+이미지:
+docker images :  이미지 리스트
+docker rmi <image_id> : 이미지 삭제
+
+컨테이너:
+docker ps : 현재 실행되고 있는 컨테이너 확인
+docker ps -a
+docker stop <container_id> :컨테이너종료
+docker rm <container_id> :컨테이너 삭제
+
+#시나리오
+docker를 이용하여 container를 실행할 경우 어느운영체제든지 간에 운영체제가 반드시 필요하다.
+docker의 기본운영체제는 리눅스운영체제를 가지고 있다.
+아래의 명령은 실행중인 컨테이너의 리눅스 운영체제의 쉘을 실행하는 명령이다.
+docker exec -it <container_id> /bin/bash
+
+uname
+
+실습 : 
+ubuntu 이미지 받기
+ubnutu 이미지 실행
+ubuntu 접속
+docker pull ubuntu
+docker run -it ubuntu
+
+#현재 운영체제 확인
+uname
+uname -a
+cat /etc/os-release
+
+apt update
+apt install lsb-release
+lsb-release -a
+
+#메모리 확인
+cd proc
+ls *info
+cat cpuinfo
+cat meminfo
+
+#자바설치
+apt update (다시 한번 무조건실행)
+apt install openjdk-21-jre-headless
+echo "export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64" | tee -a /root/.profile > /dev/null
+source /root/.profile
+java -version : 오류발생
+echo $PATH
+export PATH=$PATH:$JAVA_HOME/bin : 영구적이지 않음
+echo "export PATH=$PATH:$JAVA_HOME/bin" | tee -a /root/.bashrc > /dev/null
+
+
+#영구적으로 저장(3파일 중 하나에 export)
+~/.bashrc
+~/.bash_profile or ~/.profile
+~/.zshrc
+cd ~
+nano .bashrc (/profile)
+export PATH=$PATH:$JAVA_HOME/bin
+source .bashrc or source .profile
+
+#open ssh server설치
+apt update
+apt openssh-server -y
+service ssh start
+service ssh status
+
+apt install nano
+nano sshd_config
+/etc/ssh/sshd_config 파일에서 아래의 사항 추가 
+PermitRootLogin yes
+PasswordAuthentication yes 
+ctrl+x, y
+
+
+
+#net-tools설치
+apt-get update
+apt-get net-tools
+ifconfig
+
+#tocmat설치
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.107/bin/apache-tomcat-9.0.107.tar.gz
+tar -xvzf apache-tomcat-9.0.107.tar.gz
+cd apache-tomcat-9.0.107/bin
+./startup.sh
+apt update
+apt install ufw
+ufw allow 8080
+
+apt install curl
+curl http://172.17.0.2:8080
+
+#내pc에서 웹브라우저로 웹주소를 접근하면 접근불가
+이유는 docker의 리눅스 서버에 접근할 수 있는 방법이 없음
+
+위의 문제를 해결하기 위해서  docker의 내부 포트를(22, 8080)
+docker실행시 열어주어야한다.
+
+내컴퓨터와 포트와 docker 포트를 연결하는 역할
+
+docker(linux+ssh server+tomcat+net-tools+java+etc)
+현재 실행되는 container를 이미지파일로 만들어서 22, 8080포트를 열어주도록 만들어야 한다.
+
+확인사항)현재 컨테이너를 이미지로 만드는 방법
+
+
+
+
