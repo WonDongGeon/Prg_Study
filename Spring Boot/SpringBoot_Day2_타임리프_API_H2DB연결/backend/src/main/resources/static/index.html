@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<link href="/css/style.css" rel="stylesheet">
+<script src="/js/main.js"></script>
+</head>
+<script>
+//fetch는 동기방식(순서적으로 처리)
+/*
+fetch("http://localhost:8888/api/person/2", {
+	 method: "DELETE",
+	})
+	.then(response => {
+		if(response.ok) {
+			return response.text(); //서버가 문자열 반환 시
+		} else {
+			throw new Error("삭제 실패! 상태 코드: " + response.status);
+		}
+	})
+	.then(data => {
+		console.log(" 서버 응답 : ", data);
+		document.querySelector("body").textContent=data;
+	})
+	.catch(error => {
+		console.error("에러 발생:", error);
+		document.querySelector("body").textContent=error;
+	})
+*/
+//동기 방식이지만 비동기처리
+/*
+deletePerson(2);
+async function deletePerson(id) {
+		try {
+			const response = await fetch(`http://localhost:8888/api/person/${id}`, {
+				method:"DELETE",
+			});
+			
+			if (!response.ok) {
+				throw new Error(`삭제 실패! 상태 코드 : ${response.status}`);
+			}
+			const result = await response.text(); // 서버가 text 반환 시
+			console.log("삭제 성공:", result);
+		}catch(error){
+			console.error("에러 발생:", error.message);
+		}
+	}
+*/
+//입력 자바스크립트
+// "{\"name\":\"user100\",\"email\":\"user100@gmail.com\"}" 문자열에 대한 JSON형식
+
+/*
+const person={name:"user1000",email:"user1000@gmail.com"}; //객체
+
+fetch("http://localhost:8888/api/person", {
+	  method: "POST",
+	  headers : {"Content-Type":"application/json"},
+	  body : JSON.stringify(person)
+	})
+	  .then(response => {
+	    if (response.ok) {
+	      return response.text(); // 서버가 문자열 반환 시
+	    } else {
+	      throw new Error("입력 실패! 상태 코드: " + response.status);
+	    }
+	  })
+	  .then(data => {
+	    console.log("서버 응답:", data);
+	    document.querySelector("body").textContent=data;
+	  })
+	  .catch(error => {
+	    console.error("에러 발생:", error);
+	    document.querySelector("body").textContent=error;
+	  });
+	  */
+/*
+const person = {name:"user100",email:"user100@gmail.com"} // 객체
+
+fetch("http://localhost:8888/api/person/2", {
+	 method: "POST",
+	 headers : {"Content-Type" : "application/json"},
+	 body : JSON.stringify(person),
+	})
+	.then(response => {
+		if(response.ok) {
+			return response.text(); //서버가 문자열 반환 시
+		} else {
+			throw new Error("입력 실패! 상태 코드: " + response.status);
+		}
+	})
+	.then(data => {
+		console.log(" 서버 응답 : ", data);
+		document.querySelector("body").textContent=data;
+	})
+	.catch(error => {
+		console.error("에러 발생 : ", error);
+		document.querySelector("body").textContent=error;
+	})
+*/
+fetch("http://localhost:8888/api/persons", {
+	 method: "get",
+	})
+	.then(response => {
+		if(response.ok) {
+			return response.json();
+		} else {
+			throw new Error("삭제 실패! 상태 코드: " + response.status);
+		}
+	})
+	.then(data => {
+		console.log(" 서버 응답 : ", data);
+		//document.querySelector("body").textContent=data;
+		const root=document.querySelector("body");
+		for(i=0; i<data.length; i++) {
+			content="<ul>" + 
+			"<li>"+data[i]["id"]+"</li>"+
+			"<li>"+data[i]["name"]+"</li>"+
+			"<li>"+data[i]["email"]+"</li>"+
+			"</ul>";
+			root.innerHTML += content;
+		}
+	})
+	.catch(error => {
+		console.error("에러 발생 : ", error);
+		document.querySelector("body").textContent=error;
+	})
+</script>
+<body>
+index.html
+</body>
+</html>
