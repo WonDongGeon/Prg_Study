@@ -2,42 +2,41 @@
 
 ## ⚙️ 사용 기술 및 학습 포인트
 
-[![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://developer.mozilla.org/ko/docs/Web/HTML) 
-[![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat-square&logo=css3&logoColor=white)](https://developer.mozilla.org/ko/docs/Web/CSS) 
-[![Java](https://img.shields.io/badge/Java-007396?style=flat-square&logo=java&logoColor=white)](https://www.java.com) 
-[![JSP](https://img.shields.io/badge/JSP-007396?style=flat-square)]() 
-[![OracleDB](https://img.shields.io/badge/Oracle-000000?style=flat-square&logo=oracle&logoColor=white)](https://www.oracle.com/database/) 
-[![Spring](https://img.shields.io/badge/Spring-6DB33F?style=flat-square&logo=spring&logoColor=white)](https://spring.io) 
-[![Spring Boot](https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
 
-### HTML / CSS / JavaScript
+ 
+
+
+
+
+
+### HTML / CSS / JavaScript [![HTML](https://img.shields.io/badge/HTML5-E34F26?style=flat-square&logo=html5&logoColor=white)](https://github.com/WonDongGeon/Prg_Study/tree/main/HTML) 
 - 웹 페이지 기본 구조와 스타일링 학습
 - DOM 조작, 이벤트 처리, 폼 검증 등 동적 기능 구현
 - 반응형 웹과 레이아웃 구성 예제 포함
 
-### Java
+### Java [![Java](https://img.shields.io/badge/Java-007396?style=flat-square&logo=java&logoColor=white)](https://github.com/WonDongGeon/Prg_Study/tree/main/JAVA)
 - 객체지향 프로그래밍(OOP) 기반 코드 실습
 - 클래스, 상속, 인터페이스, 컬렉션, 예외 처리 등 핵심 개념 실습
 - 간단한 콘솔 프로그램부터 알고리즘 예제까지 포함
 
-### JSP / Servlet
+### JSP / Servlet [![JSP](https://img.shields.io/badge/JSP-007396?style=flat-square)](https://github.com/WonDongGeon/Prg_Study/tree/main/JSP) 
 - 동적 웹 페이지 구성과 서버 사이드 처리 학습
 - Form 데이터 처리, 세션/쿠키 활용, MVC 구조 이해
 - JSTL, EL(Expression Language) 활용 예제 포함
 
-### OracleDB
+### OracleDB [![OracleDB](https://img.shields.io/badge/Oracle-000000?style=flat-square&logo=oracle&logoColor=white)](https://github.com/WonDongGeon/Prg_Study/tree/main/OracleDB) 
 - 데이터베이스 설계 및 SQL 실습
 - DDL: 테이블, 제약조건 생성
 - DML: 데이터 삽입, 조회, 수정, 삭제
 - 트랜잭션, Stored Procedure, View 실습
 
-### Spring Framework
+### Spring [![Spring](https://img.shields.io/badge/Spring-6DB33F?style=flat-square&logo=spring&logoColor=white)](https://github.com/WonDongGeon/Prg_Study/tree/main/Spring) 
 - 전통적인 Spring 기반 실습
 - DI, AOP, MVC 구조 이해 및 구현
 - Controller, Service, Repository 계층 구조 설계
 - Spring 환경에서의 데이터베이스 연동 실습
 
-### Spring Boot
+### Spring Boot [![Spring Boot](https://img.shields.io/badge/SpringBoot-6DB33F?style=flat-square&logo=springboot&logoColor=white)](https://github.com/WonDongGeon/Prg_Study/tree/main/Spring%20Boot)
 - 최신 Spring Boot 기반 프로젝트 실습
 - REST API 설계와 구현
 - JPA를 활용한 ORM 기반 데이터 처리
