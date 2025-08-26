@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<h1>ajax</h1>
+<div></div>
+<script>
+//xmlHttpReuest(), .ajax() , fetch()
+
+function apifetch(){
+fetch("/api/members")
+.then(resp => resp.json())
+.then(result =>{
+	document.querySelector("div").innerHTML=
+		"<p>id:"+result[0]["id"]+"</p>"+
+		"<p>user:"+result[0]["user"]+"</p>"+
+		"<p>email:"+result[0]["email"]+"</p>";
+})
+}
+
+setTimeout(apifetch, 3000);
+</script>
+</body>
+</html>
