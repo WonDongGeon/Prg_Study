@@ -43,7 +43,7 @@
 - Spring Security를 활용한 인증/권한 관리
 - 외부 라이브러리, 테스트 코드 작성, 배포 준비 실습
 
-### Secure Coding [![Secure Coding](https://img.shields.io/badge/Secure%20Coding-FF0000?style=flat-square&logo=security&logoColor=white)](https://github.com/WonDongGeon/Prg_Study/tree/main/SecureCoding)
+### Secure Coding [![Secure Coding](https://img.shields.io/badge/Secure%20Coding-FF0000?style=flat-square&logo=security&logoColor=white)](https://github.com/WonDongGeon/Prg_Study/tree/main/Secure%20Coding)
 - **OWASP Top 10** 취약점 학습 및 대응 방법 실습  
 - SQL Injection, XSS, CSRF 등 보안 이슈 대응  
 - 안전한 입력 검증 및 암호화 기법 적용  
