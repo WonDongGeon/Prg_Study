@@ -47,7 +47,8 @@
 - **OWASP Top 10** 취약점 학습 및 대응 방법 실습  
 - SQL Injection, XSS, CSRF 등 보안 이슈 대응  
 - 안전한 입력 검증 및 암호화 기법 적용  
-- 보안 로그 및 예외 처리 Best Practice 
+- 보안 로그 및 예외 처리 Best Practice
+- SpringBoot에서 SecureCoding 활용 실습
 
 ---
 
