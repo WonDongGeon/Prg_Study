@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.UserMapper">
+ <insert id="save" parameterType="com.example.demo.User">
+        INSERT INTO USERS (username,password) 
+        VALUES (#{username}, #{password});
+ </insert>
+ 
+ <select id="findAll" resultType="com.example.demo.User">
+        SELECT username, password FROM USERS;
+ </select>
+ 
+ <select id="findByUsername" resultType="com.example.demo.User">
+        SELECT username, password FROM users 
+         WHERE username = #{username}
+</select>
+
+<update id="update" parameterType="com.example.demo.User">
+        UPDATE USERS SET password = #{password} 
+         WHERE username = #{username}
+    </update>
+
+<delete id="delete" parameterType="java.lang.String">
+       <!--  DELETE FROM users WHERE username = #{username} -->
+       DELETE FROM USERS WHERE username = '${username}'
+       <!-- #은 prepared방식, $는 createstatement -->
+</delete>
+</mapper>
