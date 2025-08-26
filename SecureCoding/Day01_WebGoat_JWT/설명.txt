@@ -1,0 +1,39 @@
+##설치프로그램
+#sts4 : http://spring.io, 반디집설치 spring 압축해제
+최신버전으로 upate(help-install new sofeware)
+webgoat 스프링import시 .github폴더 삭제
+lombok설치
+
+#docker : https://www.docker.com/
+wsl설치
+
+#자바환경설정 : jdk 15, JAVA_HOME설정, path설정
+http://jdk.java.net / https://jdk.java.net/java-se-ri/15
+
+#webgoat 8.2.2 다운로드 후 환경셋팅
+https://owasp.org/www-project-webgoat/
+https://github.com/WebGoat/WebGoat/releases
+
+#burp suit :https://portswigger.net/burp/releases
+
+#git설치 :https://git-scm.com/downloads
+
+#8080충돌시 처리
+cmd
+netstat -ano | findstr 8080 
+taskkill /f /pid <pid번호>
+{"iat":1756365559,"admin":"true","user":"Tom"}
+
+endcode/base62 암호화
+eyJpYXQiOjE3NTYzNjU1NTksImFkbWluIjoidHJ1ZSIsInVzZXIiOiJUb20ifQ==
+
+eyJpYXQiOjE3NTYzNjU1NTksImFkbWluIjoidHJ1ZSIsInVzZXIiOiJUb20ifQ.
+
+Cookie: access_token=eyJhbGciOiJIUzUxMiJ9.eyJpYXQiOjE3NTYzNjU1NTksImFkbWluIjoidHJ1ZSIsInVzZXIiOiJUb20ifQ.;
+
+spotbugs로 정확하게 검색(findbug는 설치하면 안됨)
+
+
+WebGoat-8.2.2\webgoat-lessons\jwt\src\main\java\org\owasp\webgoat\jwt\JWTVotesEndpoint.java
+
+

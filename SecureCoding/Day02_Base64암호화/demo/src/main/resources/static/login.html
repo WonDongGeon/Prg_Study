@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>/src/main/resources/static/index.html</title>
+<script>
+function encodeToBase64() {
+var inputString = document.getElementById("password").value;
+var encodedString = btoa(inputString); // JavaScript의 base64 인코딩
+document.getElementById("password").value = encodedString;
+}
+</script>
+</head>
+<body>
+<!-- http://localhost:8080/index.html -->
+<form action="/login" method="post" onsubmit="return encodeToBase64()">
+<p>아 이 디 <input type="text" name="username"><p>
+<p>비밀번호<input type="password" name="password" id="password"><p>
+<p><input type="submit" value="로그인"><p>
+</form>
+</body>
+</html>

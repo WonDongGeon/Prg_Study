@@ -1,0 +1,26 @@
+keytool -genkeypair -alias webgoat-server -keyalg RSA -keysize 2048 -validity 365 -keystore webgoat.jks -storepass changeit -keypass angeit -dname "CN=WebGoat, OU=Dev, O=Example Corp, L=Seoul, S=Seoul, C=KR"
+
+keytool -list -keystore webgoat.jks -storepass changeit 
+
+keytool -exportcert -alias webgoat-server -keystore webgoat.jks -storepass changeit -rfc -file webgoat-root.crt
+
+keytool -importkeystore -srckeystore webgoat.jks -destkeystore webgoat.p12 -srcstoretype JKS -deststoretype PKCS12 -srcstorepass changeit -deststorepass changeit -srcalias webgoat-server -srckeypass angeit -destkeypass changeit
+
+work공유문서에서 maven폴더를 c:에 복사
+자바의 JAVA_HOME 환경변수를 17버전으로 변경하기
+MAVEN_HOME=c:\maven 등록
+path에 %MAVE_HOME%\bin 등록
+WebGoat-8.2.2폴더로 이동한후 cmd실행하고
+mvn clean install -DskipTests 실행
+실행 후 server프로젝트에 target폴더안에 배포파일인 webgoat-server-8.2.0.jar
+
+cd webgoat-server\target
+java -jar -Dserver.port=8443 -Dserver.ssl.key-store=webgoat.jks -Dserver.ssl.key-store-password=changeit -Dserver.ssl.key-alias=webgoat-server -Dserver.ssl.key-password=angeit webgoat-server-8.2.0.jar
+
+문제사항: 인증서의 위치 때문에 발생
+----------------절대경로 실행---------------
+인증서 위치로 이동한 후 아래 코드 실행
+java -jar -Dserver.port=8443 -Dserver.ssl.key-store=webgoat.jks -Dserver.ssl.key-store-password=changeit -Dserver.ssl.key-alias=webgoat-server -Dserver.ssl.key-password=angeit C:\Users\admin\Documents\workspace-spring-tools-for-eclipse-4.31.0.RELEASE\WebGoat-8.2.2\webgoat-server\target\webgoat-server-8.2.1-SNAPSHOT.jar
+
+WebGoat-8.2.2\webgoat-container\src\main\resources\application-webgoat.properties에서 false를 true로 변경
+server.ssl.enabled=true
