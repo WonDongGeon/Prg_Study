@@ -1,0 +1,36 @@
+##기본설치파일
+spring프로그램설치
+git프로그램설치
+docker프로그램 설치(https://github.com/microsoft/WSL/releases)
+
+###docker에서 gitlab-ce, gitlab-runner,linux 이미지 다운로드
+##gitlab 서버 설치
+docker run --detach --hostname gitlab.example.com --publish 4443:443 --publish 8888:80 --publish 2222:22 --name gitlab --restart always --volume /srv/gitlab/config:/etc/gitlab --volume /srv/gitlab/logs:/var/log/gitlab --volume /srv/gitlab/data:/var/opt/gitlab gitlab/gitlab-ce:latest
+
+#gitlab서버 비밀번호변경
+gitlab-rails console -e productio  [시간걸림 기다리세요]
+user = User.where(id:1).first
+user.password = 'adminadmin'
+user.password_confirmation = 'adminadmin'
+user.save(validate:false)
+exit
+
+ ##gitlab-runner시스템설치
+docker run -d --name gitlab-runner --restart always -v /srv/gitlab-runner/config:/etc/gitlab-runner -v /var/run/docker.sock:/var/run/docker.sock gitlab/gitlab-runner:latest
+
+##배포시스템
+docker run -it --name deploysystem -p 9999:8080 ubuntu bash
+apt-get update && apt-get install -y openssh-server && mkdir /var/run/sshd
+
+echo 'root:1234' | chpasswd
+
+sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config && sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config
+
+--------------------------
+
+spring boot 로그인 프로젝트한것을 배포파일로 java -jar xxxxx.jar을 실행하도록 구현하시오 
+
+1. gitlab에서 프로젝트 생성(빈프로젝트) 
+2. spring boot project를 gitlab의 프로젝트와 연결하기 
+3. spring boot project폴더 gitlab-ci.yml을 작성(docker의 웹서버에 jar파일을 업로드하고, jar을 동작시켜 웹서버가 동작되는 배포까지 처리하는코드 작성 
+4. push를 할 경우 최종 배포 완료 를 전부 상세하게 설명해줘

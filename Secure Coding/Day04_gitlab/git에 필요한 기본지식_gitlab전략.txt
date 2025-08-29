@@ -1,0 +1,137 @@
+##git에 필요한 기본지식
+#branch를 일반적으로 사용하는 이름정의
+main: 실제 서비스에 배포되는 코드 (운영환경)
+develop: 여러 개발자의 작업을 통합하는 브랜치 (개발환경)
+feature/*: 각 개발자가 작업하는 브랜치
+main-develop-feature/*
+  ^________^_______|
+
+feature/login : 로그인 개발
+
+main -> develop -> feature/* : 브런치를 생성 git checkout -b [만들브런치명] [대상]
+git checkout -b develop main : main으로 부터 develop 브런치를 만들다. 
+git checkout -b feature/login develop
+
+#브런치 합치기
+현재 브런치가 어디에 위치해 있는지 확인: git branch -> develop
+git merge feature/login : feature/login브런치를 합칩니다.[빠진상황 어디에(현재브런치)]
+대상이 빠져있는 부분은 현재 위치한 브런치를 기준으로 한다.
+
+#push : 원격브런치에 올리기
+git push : 현재브런치는 main이라고 가정, 원격의 의미도 없고, 로컬의 의미도 없는사항(등록이 되어 있기 때문에 이와 같은 명령이 가능)
+push명령 자체가 원격에 올립니다.라는 뜻을 가지고 있으므로 origin에 올린다는 의미
+현재의 브런치를 원격에 올립니다.
+git push origin main:
+
+#clone
+git clone http://localhost/testuser/www.git : 현재위치에서 www폴더를 생성한 프로젝트 다운로드 받기, 자동으로 원격브런치(origin)등록, 로컬브런치(main)가 등록됨
+
+#fetch : 원격에서 최신상태의 내용을 참조한다.
+git fetch origin
+
+#pull : 원격브런치의 내용을 업데이트한다.
+git pull origin main
+
+#이전으로 되돌리기
+git reset
+git revert
+
+##자주발생하는 reject
+시나리오:
+GitHub 원격저장소(remote) 에서 누군가가 수정을 했습니다.
+로컬(local) 에서는 예전에 clone 한 뒤 별도로 변경을 했습니다.
+그 상태에서 git push 를 하면 → 원격 저장소에 이미 새로운 커밋이 생겼기 때문에 reject(거절) 오류가 발생합니다.
+1)git clone http://localhost:8888/testuser/www.git
+2)gitlab server Readme파일을 수정
+3)개발pc에서 a.txt를 작성하고 push처리[reject]
+cd www 
+copy con a.txt
+git add .
+git commit -m "a.txt"
+git push [reject]
+reject의 원인은 불일치:clone을 했을 때 Readme변경이 안된상태, 이후에 Readme변경
+a.txt파일을 만들고 push하려고 하니 원격저장소의 내용(Readme)과  로컬저장의 내용(Readme)이 불일치 상황발생
+해결방법1)
+git pull origin main -> :q
+git push
+
+해결방법2)
+git fetch origin : 최신버전을 가지고 오는 단계
+git rebase origin/main : 최신버전을 적용하는 단계
+git push
+---------------------------------------------------------
+.gitlab-ci.yml파일은 무조건 push할 때 동작되는 기본조건
+main 브런치일 때만 .gitlab-ci.yml파일을 동작 시키고 싶은 경우 어떻게 해야하나?
+
+git checkout -b devlop main
+git push --set-upstream origin devlop
+
+.gitlab-ci.yml 에 속성을 추가하여 main branch만 동작하도록 처리ㅎ
+only:
+    - main
+
+또다른 방법
+variables:
+  CI_COMMIT_BRANCH: main
+--------------------------------------
+최종관리자가 배포: main -> 전체를 합한 후 push를 실행할 경우 .gitlab-ci.yml 서버배포완료
+
+개발자3명-중간관리-최종관리자
+개발자는 feature를 이용하여 개발한 후 중간관리자에서 upload하고
+중간관리자는 확인 후 develop에 merge작업수행 후 최종개발에게 upload
+최종관리자는 소스확인 main브런치로 합한 후 push하면 .gitlab-ci.yml 실행하여 자동배포
+
+1)브런치 전략
+main : 서비스 운영 코드(배포용)
+develop : 통합 개발 코드
+feature/* : 개발자가 만든 기능 브런치
+
+2)개발자 작업 과정
+gitlab server에서 기본프로젝트 생성
+main, develop, feature/*브런치 생성
+#기본 브런치 셋팅
+git checkout develop
+git pull origin develop
+git checkout -b feature/login
+
+#기능개발(feature/login)
+copy con login.txt -> 로그인 기능개발
+git add login.txt
+git commit -m "add login feature"
+#원격저장소에 push
+git push origin feature/login
+
+3)gitlab에서 Merge Request생성
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'  

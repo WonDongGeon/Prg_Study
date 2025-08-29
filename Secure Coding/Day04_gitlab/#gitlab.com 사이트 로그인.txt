@@ -1,0 +1,159 @@
+#gitlab.com 사이트 로그인
+
+#gitlab-runner : window용 gitlab-runner.exe사용할 경우 동작 안됨,
+반드시 리눅스용을 사용해야함.
+
+#wsl명령을 이용하여 리눅스를 사용할 수 있음
+
+#gitlab-runner설치방법
+docker설치, 리눅스에서 설치하는 방법
+- 필수 패키지
+sudo apt-get update
+sudo apt-get install -y apt-transport-https ca-certificates curl
+curl -L --output /etc/apt/trusted.gpg.d/gitlab.asc https://packages.gitlab.com/gitlab/gitlab-runner/gpgkey
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository "deb https://packages.gitlab.com/gitlab/gitlab-runner/debian/ $(lsb_release -c | awk '{print $2}') main"
+-gitlab-runner설치
+sudo apt-get update
+sudo apt-get install gitlab-runner
+
+#git설치
+
+#.gitlab-ci.yml
+test-job:
+  script:
+    - echo "Runner is working!!!"
+---------------------------------
+아래코드는 pending이 발생하는 코드(tag가 존재않지않음, 등록된 태그 docker,linux)
+stages:
+  - test
+
+simple_job:
+  stage: test
+  script:
+    - echo "Hello, GitLab CI!"
+  tags:
+    - docker,linux
+
+gpt질의)
+.gitlab-ci.yml파일에서 tag의 역할과 중요성
+gitlab-runner register와 .gitlab-ci.yml파일에 사용한 간단 예시작성
+tag과 simple이 아닌 docker로 설정된 경우와 docker,simple로 정의된 경우 동작 상태를 확인
+
+#gitlab-runner를 이용하여  등록
+gitlab-runner register
+url:https://gitlab.com/
+token:사이트에서 토큰 복사
+tag*** : docker,linux (.gitlab-ci.yml작성시 유의해야하는 사항)
+
+#정리
+GitLab URL: GitLab 서버 URL (예: https://gitlab.com).
+Registration Token: GitLab에서 제공한 등록 토큰.
+Runner 이름: 등록할 Runner의 이름.
+Executor 선택: 사용할 executor를 선택합니다. (shell, docker, 등)
+Tags: Runner에 태그를 추가하려면 입력 (선택 사항).
+Runner의 도메인: 도메인 설정.
+
+#git을 이용하여 프로젝트를 다운로드 하는 방법
+git clone https://gitlab.com/jeonkwangwoxxxx/www.git
+인증절차는 세가지:브라우저통해 다시 로그인, token(개인토큰을 의미, runner token은 아님),
+패스워드)
+
+##gitlab-runner를 docker에서 설치할 경우
+1  gitlab-runner register
+    2  git clone https://gitlab.com/jeonkwangwxxx/www.git
+    3  ls
+    4  ls -al
+    5  cd www
+    6  ls
+    7  ls -al
+    8  nano
+    9  apt update
+   10  apt install nano
+   11  ls -al
+   12  nano .gitlab-ci.yml
+   13  git add .
+   14  git commit -m "work2"
+   15  git config --global user.email "jeonkwangxxxx@gmxl.com"
+   16  git config --global user.name "jeonkwaxxx"
+   17  git commit -m "work2" 
+   18  git push
+
+.gitlab-ci.yml에  tags를 추가한 코드를 실행하면 태그가 존재함에도 오류가 발생한다.
+이에 대한 원인은 /var/run/docker.sock 파일이 생성되지 않아 나타는 오류이다.
+아래의 명령을 통해 docker를 새로 작성할 경우 문제가 해결된다.
+docker run -d --name gitlab-runner --restart always -v /srv/gitlab-runner/config:/etc/gitlab-runner -v /var/run/docker.sock:/var/run/docker.sock gitlab/gitlab-runner:latest
+#chatgptp질문에 대한 아래의 방법이 안될경우 기존 컨테이너는 중지하고 새로운 컨테이너를 만들어서 테스트해야함.
+아래의 명령은 tags 사용시 오류나는 부분을 해결함
+docker run -d --name gitlab-runner 
+--restart always 
+-v /srv/gitlab-runner/config:/etc/gitlab-runner 
+-v /var/run/docker.sock:/var/run/docker.sock gitlab/gitlab-runner:latest
+
+chatgptp)리눅스에서 /var/run/docker.sock파일을 작성하기 위한 명령으로 mode는 srw-rw---- 파일을 만드는 방법
+mknod /var/run/docker.sock p
+chmod 660 /var/run/docker.sock
+chown root:docker /var/run/docker.sock
+
+#www/Main.java
+public class Main{
+public static void main(String[] args){
+System.out.println("Main 클래스 컴파일!!!");
+}
+}
+
+#Main.java파일을 gitlab에서 commit을 하면 결과물인 Main.class가 생성되고 이 생성물을 다운로드할 수 있음
+stages:
+  - build
+
+build:
+    stage: build
+    image: openjdk:17
+    script:
+        - javac Main.java
+        - jar cfe Main.jar Main Main.class
+        - java Main
+    artifacts:
+      paths:
+        - Main.jar
+
+#추가적으로 deploy를 실행하면 반드시 gitlab-runner가 존재해야함
+만약에 gitlab-runner가 연결된 상태가 아니면 pendding(대기)상태로 유지됨.
+stages:
+  - build
+  - deploy
+
+java-build:
+    stage: build
+    image: openjdk:17
+    script:
+        - javac Main.java
+        - jar cfe Main.jar Main Main.class
+        - java Main
+    artifacts:
+      paths:
+        - Main.jar
+
+java-deploy:
+  stage: deploy
+  script:
+    - apt-get update -y  # 패키지 목록 업데이트
+    - apt-get install -y sshpass  # sshpass 설치
+    - echo "Deploying Main.jar"
+    - sshpass -p "1234" scp -o StrictHostKeyChecking=no -P 13891 Main.jar root@0.txxxxxxxrok.io:/root/
+-------------------------------------------------------------------------------------
+패스워드 접속이 아닌  ssh접속하기
+ssh-keygen -A
+셋중하나
+ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N ""
+ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ""
+ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ""
+
+
+
+
+
+
+
+
+
