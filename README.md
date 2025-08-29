@@ -24,12 +24,6 @@
 - Form 데이터 처리, 세션/쿠키 활용, MVC 구조 이해
 - JSTL, EL(Expression Language) 활용 예제 포함
 
-### OracleDB [![OracleDB](https://img.shields.io/badge/Oracle-000000?style=flat-square&logo=oracle&logoColor=white)](https://github.com/WonDongGeon/Prg_Study/tree/main/OracleDB) 
-- 데이터베이스 설계 및 SQL 실습
-- DDL: 테이블, 제약조건 생성
-- DML: 데이터 삽입, 조회, 수정, 삭제
-- 트랜잭션, Stored Procedure, View 실습
-
 ### Spring [![Spring](https://img.shields.io/badge/Spring-6DB33F?style=flat-square&logo=spring&logoColor=white)](https://github.com/WonDongGeon/Prg_Study/tree/main/Spring) 
 - 전통적인 Spring 기반 실습
 - DI, AOP, MVC 구조 이해 및 구현
