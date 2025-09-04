@@ -1,0 +1,73 @@
+##스프링 cli다운로드
+https://docs.spring.io/spring-boot/installing.html#getting-started.installing.cli
+
+##backend 세팅
+spring init --dependencies=web,data-jpa,h2,devtools --build=maven --language=java --name=my-backend backend
+↓
+D:\download\spring-3.5.5\bin\spring init --dependencies=web,data-jpa,h2,devtools --build=maven --language=java --name=my-backend backend
+
+##frontend 세팅
+npm create vue@latest frontend
+ cd frontend
+ npm install
+ npm run dev
+
+#/project.code-workspace 로 프로젝트 통합
+{
+    "folders": [
+      { "path": "backend" },
+      { "path": "frontend" }
+    ],
+    "settings": {
+      "editor.formatOnSave": true,
+      "files.exclude": {
+        "**/node_modules": true,
+        "**/target": true
+      }
+    }
+  }
+
+#/.vscode/tasks.json 작업실행
+{
+    "version": "2.0.0",
+    "tasks": [
+    {
+    "label": "Start Backend",
+    "type": "shell",
+    "command": "mvnw.cmd spring-boot:run -Dspring-boot.run.arguments=--server.port=8080",
+    "options": {
+    "cwd": "${workspaceFolder}/backend",
+    "shell": {"executable": "cmd.exe","args": ["/c"]}
+    },
+    "problemMatcher": []
+    },
+    {
+    "label": "Start Frontend",
+    "type": "shell",
+    "command": "npm install && npm run dev",
+    "options": {
+    "cwd": "${workspaceFolder}/frontend",
+    "shell": {"executable": "cmd.exe","args": ["/c"]}
+    },
+    "problemMatcher": []
+    },
+    {
+    "label": "Start Both (Backend + Frontend)",
+    "dependsOn": ["Start Backend", "Start Frontend"],
+    "dependsOrder": "parallel"
+    }
+    ]
+}
+
+##lombok, jpa관련 라이브러리 확장팩 설치
+
+##application.properties
+spring.application.name=my-backend
+spring.datasource.url=jdbc:h2:~/test
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.username=sa
+spring.datasource.password=
+spring.jpa.database-platform=org.hibernate.dialect.H2Dialect
+spring.jpa.properties.hibernate.hbm2ddl.auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.format_sql=true
